@@ -596,8 +596,14 @@ document.addEventListener('DOMContentLoaded', function () {
     const currentUserIdVal = document.getElementById('currentUserId') ? document.getElementById('currentUserId').value : null;
     if(!currentUserIdVal) return; 
 
-    // --- A. PEERJS SETUP (WITH STUN) ---
-    if (!window.peer) {
+    // --- PERFORMANCE OPTIMIZATION: Only run messaging logic on messaging.php ---
+    // On other pages (dashboard, profile, etc.), skip heavy initialization
+    const isMessagingPage = window.location.pathname.includes('messaging.php') || 
+                            window.location.pathname.endsWith('messaging') ||
+                            document.getElementById('messagingPageContainer') !== null;
+    
+    // --- A. PEERJS SETUP (WITH STUN) - Only initialize on messaging page ---
+    if (!window.peer && isMessagingPage) {
         console.log("Initializing PeerJS...");
         window.peer = new Peer('smart_study_user_' + currentUserIdVal, {
             config: {
@@ -905,8 +911,11 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         });
     }
-    window.pollRequestsInterval = setInterval(pollRequests, 3000);
-    pollRequests();
+    // Only poll for message requests on messaging page
+    if (isMessagingPage) {
+        window.pollRequestsInterval = setInterval(pollRequests, 3000);
+        pollRequests();
+    }
 
     if (optionsBtn && dropdown) {
         optionsBtn.addEventListener('click', (e) => {
@@ -1307,16 +1316,15 @@ document.addEventListener('click', function(e) {
         
         if (warningModal) {
             warningModal.style.display = 'flex';
+        } else {
+            // Fallback kung sakaling wala yung modal HTML (Emergency Alert)
+            if (typeof window.askConfirm === 'function') {
+                window.askConfirm('Active call', 'Warning — You have an active call. Leaving will disconnect you immediately. Do you want to leave?')
+                    .then(yes => { if (yes) { if (window.endCall) window.endCall(true); window.location.href = href; } });
             } else {
-                // Fallback kung sakaling wala yung modal HTML (Emergency Alert)
-                if (typeof window.askConfirm === 'function') {
-                    window.askConfirm('Active call', 'Warning — You have an active call. Leaving will disconnect you immediately. Do you want to leave?')
-                        .then(yes => { if (yes) { if (window.endCall) window.endCall(true); window.location.href = href; } });
-                } else {
-                    // extreme fallback
-                    if (window.endCall) window.endCall(true);
-                    window.location.href = href;
-                }
+                // extreme fallback
+                if (window.endCall) window.endCall(true);
+                window.location.href = href;
             }
         }
     }

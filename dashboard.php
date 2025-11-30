@@ -225,75 +225,7 @@ $medal_icon = ($current_user_points >= 2000) ? '🏆' : (($current_user_points >
     <?php include __DIR__ . '/includes/layout_preamble.php'; ?>
     <link rel="stylesheet" href="css/layout.css">
     <!-- page loader (restored) -->
-    
-    <style>
-        /* GLOBAL RESET */
-        body { font-family: 'Inter', sans-serif; background-color: #0f172a; margin: 0; padding: 0; overflow-x: hidden; color: #f8fafc; }
-        
-        /* Sidebar & main-content structural styles are provided globally via css/layout.css */
-
-        /* LEADERBOARD */
-        .leaderboard-mini { display: flex; flex-direction: column; gap: 10px; }
-        .leaderboard-item { display: flex; align-items: center; justify-content: space-between; padding: 12px; background: rgba(255,255,255,0.03); border-radius: 10px; border: 1px solid rgba(255,255,255,0.05); transition: 0.2s; }
-        .leaderboard-item:hover { background: rgba(255,255,255,0.08); border-color: #6366f1; transform: translateX(5px); }
-        .leaderboard-item.highlight { background: linear-gradient(90deg, rgba(99,102,241,0.2), transparent); border-left: 4px solid #6366f1; }
-        .rank { font-weight: 800; color: #94a3b8; width: 30px; }
-        .user-mini { display: flex; align-items: center; gap: 10px; flex-grow: 1; }
-        .avatar-mini { width: 30px; height: 30px; border-radius: 50%; overflow: hidden; background: #334155; display: flex; align-items: center; justify-content: center; font-size: 0.8rem; color: white; }
-        .avatar-mini img { width: 100%; height: 100%; object-fit: cover; }
-        .points { font-weight: 700; color: #10b981; }
-
-        /* RESPONSIVE */
-        @media (max-width: 768px) {
-            .sidebar { transform: translateX(-100%); }
-            .sidebar.open { transform: translateX(0); }
-            .main-content { margin-left: 0; }
-            .top-bar .btn-toggle { display: block; }
-        }
-        /* Focus warning banner */
-        .focus-warning { position: fixed; left: 50%; transform: translateX(-50%) translateY(-20px); top: 20px; z-index: 15000; width: calc(100% - 40px); max-width: 900px; box-shadow: 0 10px 30px rgba(2,6,23,0.6); border-radius: 12px; opacity: 0; pointer-events: none; transition: transform 280ms cubic-bezier(.2,.9,.2,1), opacity 220ms ease; }
-        .focus-warning.show { transform: translateX(-50%) translateY(0); opacity: 1; pointer-events: auto; }
-        .focus-warning-inner { display:flex; align-items:center; gap:12px; padding:14px 18px; border-radius: 12px; background: linear-gradient(90deg, rgba(99,102,241,0.14), rgba(236,72,153,0.10)); border: 1px solid rgba(255,255,255,0.06); backdrop-filter: blur(6px); }
-        .focus-warning-icon { width:44px; height:44px; border-radius:10px; display:flex; align-items:center; justify-content:center; background: linear-gradient(135deg,#ec4899,#6366f1); color:white; box-shadow: 0 6px 18px rgba(99,102,241,0.15); }
-        .focus-warning-text h4 { margin:0; font-size:1rem; font-weight:700; color:#fff; }
-        .focus-warning-text p { margin:0; font-size:0.85rem; color: #e6eef9; opacity:0.9; }
-        .focus-warning-actions { margin-left:auto; }
-        .btn-small { background: rgba(255,255,255,0.06); color: #f8fafc; border: 1px solid rgba(255,255,255,0.06); padding:8px 12px; border-radius: 8px; cursor:pointer; font-weight:600; }
-
-        /* GEMINI CHAT ASSISTANT (floating) */
-        .gemini-assistant { position: fixed; right: 22px; bottom: 22px; z-index:18000; font-family: 'Inter', sans-serif; }
-        .gemini-toggle { width:56px; height:56px; border-radius:50%; background:#6366f1; color:#fff; border:none; box-shadow:0 8px 22px rgba(0,0,0,0.35); display:flex; align-items:center; justify-content:center; cursor:pointer; font-size:1.35rem; position:relative; }
-        .gemini-badge { position:absolute; top:-6px; right:-6px; background:#10b981; color:#052e1a; padding:3px 6px; font-size:0.7rem; border-radius:12px; font-weight:700; }
-        .gemini-panel { width:360px; max-width:calc(100vw - 56px); height:460px; background:linear-gradient(180deg,#071128, #0b1220); color:#e6eef9; border-radius:12px; box-shadow:0 20px 60px rgba(0,0,0,0.6); margin-bottom:12px; overflow:hidden; display:none; flex-direction:column; }
-        .gemini-panel.show { display:flex; }
-        .gemini-header { display:flex; align-items:center; gap:10px; padding:12px 14px; border-bottom:1px solid rgba(255,255,255,0.03); }
-        .gemini-title { font-weight:700; display:flex; gap:8px; align-items:center; color:#dbeafe; }
-        .gemini-title small { font-weight:600; color:#9fb2ff; font-size:0.78rem; opacity:0.9; }
-        .gemini-close { margin-left:auto; background:transparent; color:#9aa7c7; border:none; font-size:20px; cursor:pointer; }
-        .gemini-body { padding:10px; display:flex; flex-direction:column; gap:8px; height:calc(100% - 120px); }
-        .gemini-messages { overflow:auto; flex:1; display:flex; flex-direction:column; gap:8px; padding-right:6px; }
-        .gemini-empty { color:#9aa7c7; font-size:0.9rem; text-align:center; margin:8px 4px; }
-        .gemini-msg { max-width:86%; padding:10px 12px; border-radius:10px; font-size:0.92rem; line-height:1.25; }
-        .gemini-msg.user { background: rgba(255,255,255,0.06); color:#e6eef9; align-self:flex-end; }
-        .gemini-msg.ai { background: linear-gradient(90deg,#334155, #0f172a); color:#cfe0ff; align-self:flex-start; border:1px solid rgba(255,255,255,0.02); }
-        .gemini-footer { padding:10px; display:flex; gap:8px; align-items:center; border-top:1px solid rgba(255,255,255,0.03); }
-        #geminiInput { flex:1; background:transparent; border:1px solid rgba(255,255,255,0.04); padding:8px 10px; border-radius:8px; color:#e6eef9; outline:none; }
-        #geminiSend { padding:8px 12px; border-radius:8px; border:none; cursor:pointer; background:#6366f1; color:white; font-weight:700; }
-        .gemini-loading { display:inline-block; font-size:0.9rem; color:#9fb2ff; opacity:0.9; margin-left:8px; }
-        /* PRE-RENDERED FAQ list styles */
-        .gemini-faq-list { display:flex; flex-direction:column; gap:8px; padding:6px; }
-        .gemini-faq-item { background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.03); padding:10px; border-radius:8px; cursor:pointer; display:flex; justify-content:space-between; gap:8px; align-items:center; transition: background 160ms ease, transform 120ms ease; }
-        .gemini-faq-item:hover { background: rgba(255,255,255,0.04); transform: translateY(-2px); }
-        .gemini-faq-item.answered { background: linear-gradient(90deg, rgba(51,65,85,0.12), rgba(51,65,85,0.03)); border-color: rgba(99,102,241,0.15); }
-        .gemini-faq-item .faq-question { font-weight: 600; color: #e6eef9; font-size: 0.95rem; }
-        .gemini-faq-item .faq-hint { font-size: 0.78rem; color: #9aa7c7; padding: 4px 8px; border-radius: 6px; background: rgba(255,255,255,0.02); }
-        .gemini-faq-item .faq-hint { display:flex; align-items:center; gap:6px; }
-        .gemini-faq-item .faq-hint::before { content: '▾'; display:inline-block; transform-origin:center; transition: transform 160ms ease; }
-        .gemini-faq-item.expanded .faq-hint::before { transform: rotate(180deg); }
-        .gemini-faq-answer { width: calc(100% - 20px); padding:12px; border-radius:8px; margin:6px 6px 0 6px; background: linear-gradient(90deg,#233146, #0f172a); color:#cfe0ff; border:1px solid rgba(255,255,255,0.03); box-shadow: 0 6px 18px rgba(2,6,23,0.55); }
-        .gemini-faq-list .gemini-faq-answer { margin-left: 0; }
-        .gemini-admin-btn { font-size:0.85rem; }
-    </style>
+    <!-- Inline styles moved to css/dashboard.css for better performance -->
 </head>
 <body>
     <?php include 'includes/mobile_blocker.php'; ?>
@@ -370,15 +302,14 @@ $medal_icon = ($current_user_points >= 2000) ? '🏆' : (($current_user_points >
                         
                         <div class="schedule-list" id="aiScheduleList">
                         <?php
-                        $fetch_conn = new mysqli('localhost', 'root', '', 'smart_study');
-
-                        if ($fetch_conn->connect_error) {
+                        // Reuse existing $conn instead of creating new connection
+                        if (!$db_fetch_success) {
                             echo "<p style='color:red; text-align:center; padding:20px;'>DB Connection Failed.</p>";
                         } else {
                             $uid_for_task = $_SESSION['user_id'];
                             // Kumuha ng mas marami (Limit 20) pero 3 lang ipapakita muna
                             $f_sql = "SELECT * FROM tasks WHERE user_id = $uid_for_task AND status = 'pending' ORDER BY id DESC LIMIT 20";
-                            $f_result = $fetch_conn->query($f_sql);
+                            $f_result = $conn->query($f_sql);
 
                             if ($f_result && $f_result->num_rows > 0) {
                                 $count = 0;
@@ -448,7 +379,7 @@ $medal_icon = ($current_user_points >= 2000) ? '🏆' : (($current_user_points >
                                         <p style="font-size: 1.1rem;">No tasks yet. Generate one above!</p>
                                       </div>';
                             }
-                            $fetch_conn->close();
+                            // No need to close connection here - will be closed at end of page or when PHP exits
                         }
                         ?>
                     </div>
@@ -785,14 +716,14 @@ $medal_icon = ($current_user_points >= 2000) ? '🏆' : (($current_user_points >
         </div>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> 
+    <script src="https://cdn.jsdelivr.net/npm/chart.js" defer></script> 
     <!-- PeerJS loaded in call_overlay.php to avoid duplication -->
-    <script src="js/main.js"></script>
-    <script src="js/dashboard.js"></script>
-    <script src="js/smart_study_ai.js"></script>
-    <script src="js/sidebar.js"></script>
+    <script src="js/main.js" defer></script>
+    <script src="js/dashboard.js" defer></script>
+    <script src="js/smart_study_ai.js" defer></script>
+    <script src="js/sidebar.js" defer></script>
     <!-- messaging.js included via call_overlay.php so remove duplicate here -->
-    <script src="js/dashboard_notifications.js"></script>
+    <script src="js/dashboard_notifications.js" defer></script>
     
     <?php if (file_exists(__DIR__ . '/includes/admin_config.php')) include_once __DIR__ . '/includes/admin_config.php'; ?>
     <script>
@@ -820,22 +751,8 @@ $medal_icon = ($current_user_points >= 2000) ? '🏆' : (($current_user_points >
 
             // LOGOUT MODAL is handled globally; no per-page handlers to avoid duplicates
 
-            // REALTIME BADGE UPDATER (Polling)
-            function updateBadge() {
-                fetch('dashboard.php?ajax_action=get_unread_count')
-                .then(response => response.json())
-                .then(data => {
-                    const badge = document.getElementById('sidebarMsgBadge');
-                    if (data.count > 0) {
-                        badge.style.display = 'inline-block';
-                        badge.innerText = data.count;
-                    } else {
-                        badge.style.display = 'none';
-                    }
-                })
-                .catch(err => console.log('Polling error:', err));
-            }
-            window.dashboardBadgeInterval = setInterval(updateBadge, 3000);
+            // NOTE: Badge updater removed - now handled by js/dashboard_notifications.js
+            // to avoid duplicate intervals and memory leaks
 
             // ONBOARDING / TUTORIAL UI HANDLER
             try {
