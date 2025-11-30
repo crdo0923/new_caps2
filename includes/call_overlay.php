@@ -4,6 +4,12 @@
     <input type="hidden" id="currentUserId" value="<?php echo $_SESSION['user_id']; ?>">
 <?php endif; ?>
 
+<?php
+// Performance optimization: Detect if we're on messaging page
+$current_page = basename($_SERVER['PHP_SELF']);
+$is_messaging_page = ($current_page === 'messaging.php');
+?>
+
 <div id="callModal" class="modal-overlay" style="background:rgba(0,0,0,0.95); z-index:2020; display: none;">
     <div class="modal-content" style="background:transparent; border:none; display:flex; flex-direction:column; align-items:center; width:100%; height:100%; max-width: none;">
         <button id="btnMinimizeCall" title="Minimize Call"
@@ -84,8 +90,14 @@
     <i class="bx bx-phone"></i> Back to Call
 </button>
 
+<?php if ($is_messaging_page): ?>
+<!-- Only load PeerJS and full messaging.js on messaging page -->
 <script src="https://unpkg.com/peerjs@1.5.2/dist/peerjs.min.js"></script>
 <script src="js/messaging.js?v=<?php echo time(); ?>"></script>
+<?php else: ?>
+<!-- On non-messaging pages, load lightweight version for notifications only -->
+<script src="js/messaging_lite.js?v=<?php echo time(); ?>"></script>
+<?php endif; ?>
 
 <script src="js/spa_navigation.js?v=<?php echo time(); ?>"></script>
 <?php
