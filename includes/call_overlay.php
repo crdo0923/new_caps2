@@ -1,5 +1,3 @@
-<link rel="stylesheet" href="css/messaging.css"> 
-
 <?php if(isset($_SESSION['user_id'])): ?>
     <input type="hidden" id="currentUserId" value="<?php echo $_SESSION['user_id']; ?>">
 <?php endif; ?>
@@ -9,6 +7,10 @@
 $current_page = basename($_SERVER['PHP_SELF']);
 $is_messaging_page = ($current_page === 'messaging.php');
 ?>
+
+<?php if ($is_messaging_page): ?>
+<!-- Call UI modals - only needed on messaging page -->
+<link rel="stylesheet" href="css/messaging.css"> 
 
 <div id="callModal" class="modal-overlay" style="background:rgba(0,0,0,0.95); z-index:2020; display: none;">
     <div class="modal-content" style="background:transparent; border:none; display:flex; flex-direction:column; align-items:center; width:100%; height:100%; max-width: none;">
@@ -90,23 +92,10 @@ $is_messaging_page = ($current_page === 'messaging.php');
     <i class="bx bx-phone"></i> Back to Call
 </button>
 
-<?php if ($is_messaging_page): ?>
 <!-- Only load PeerJS and full messaging.js on messaging page -->
 <script src="https://unpkg.com/peerjs@1.5.2/dist/peerjs.min.js"></script>
 <script src="js/messaging.js?v=<?php echo time(); ?>"></script>
-<?php else: ?>
-<!-- On non-messaging pages, load lightweight version for notifications only -->
-<script src="js/messaging_lite.js?v=<?php echo time(); ?>"></script>
-<?php endif; ?>
 
-<script src="js/spa_navigation.js?v=<?php echo time(); ?>"></script>
-<?php
-    // Add gamer-tag overlay to most pages (skip messaging which explicitly disables it)
-    $current_file = basename($_SERVER['PHP_SELF']);
-    if ($current_file !== 'messaging.php' && file_exists(__DIR__ . '/gametag_overlay.php')) {
-        include_once __DIR__ . '/gametag_overlay.php';
-    }
-?>
 <div id="leaveCallModal" class="modal-overlay" style="z-index: 20000; display: none; backdrop-filter: blur(5px);">
     <div class="modal-content" style="max-width: 400px; text-align: center; background: #1e293b; border: 1px solid #334155; border-radius: 16px; box-shadow: 0 20px 50px rgba(0,0,0,0.5); padding: 30px;">
         
@@ -129,6 +118,11 @@ $is_messaging_page = ($current_page === 'messaging.php');
         </div>
     </div>
 </div>
+
+<?php endif; ?>
+<!-- End of messaging page specific content -->
+
+<!-- GLOBAL MODALS (needed on all pages) -->
 
 <!-- GLOBAL CUSTOM CONFIRM (site-wide) -->
 <style>
