@@ -1,0 +1,3199 @@
+/*
+ * ===================================================
+ * MESSAGING PAGE STYLES (css/messaging.css)
+ * ===================================================
+ */
+
+/* -------------------- 1. Base Structure & Variables -------------------- */
+:root {
+    --primary-color: #6366f1;
+    --secondary-color: #8b5cf6;
+    --dark-bg: #0f172a;
+    --dark-card: #1e293b;
+    --text-light: #f8fafc;
+    --text-gray: #cbd5e1;
+    --color-success: #10b981;
+    --color-unread: #ef4444;
+    --bg-input: #334155;
+    --bg-hover: #334155;
+    --border-color: #334155; 
+    --primary-light: rgba(99, 102, 241, 0.1);
+}
+
+/* -------------------- 2. Main Page Layout -------------------- */
+/* -------------------- 2. Main Page Layout (FIXED CENTERING) -------------------- */
+
+/* Tanggalin ang tuldok sa 'body' para gumana ang selector */
+body.no-sidebar-layout .main-content.full-width-layout {
+    margin-left: 0 !important;  /* Alisin ang space ng sidebar */
+    width: 100% !important;     /* Sakupin ang buong screen */
+    padding: 2rem 20px;         /* Padding sa gilid */
+    min-height: 100vh;
+    
+    /* Flexbox para i-center ang laman */
+    display: flex;
+    flex-direction: column;
+    align-items: center;        /* Ito ang maglalagay sa GITNA */
+}
+
+/* Limitahan ang lapad ng Messaging Section para hindi sobrang banat */
+#messaging-section {
+    width: 100%;
+    max-width: 1400px;          /* Hanggang dito lang ang lapad */
+    margin: 0 auto;             /* Siguradong gitna */
+    display: flex;
+    flex-direction: column;
+}
+
+/* I-align ang Top Controls (Back button, Header, Profile) sa Chat Box */
+.page-top-controls {
+    width: 100%;
+    max-width: 100%;            /* Sumunod sa lapad ng messaging-section */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+}
+.section-header h1 { color: var(--text-light); margin: 0; }
+.section-header p { display: none; }
+.btn-back, .current-user-display {
+    position: static; 
+    flex-shrink: 0; 
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.5rem;
+    width: fit-content;
+    background: var(--dark-card); 
+    color: var(--text-light); 
+    text-decoration: none;
+    border-radius: 10px;
+    border: 1px solid var(--border-color); 
+    transition: all 0.3s;
+    font-weight: 500;
+}
+.btn-back:hover, .current-user-display:hover {
+    background: var(--primary-color);
+    transform: translateY(-1px); 
+    box-shadow: 0 4px 10px rgba(99, 102, 241, 0.3);
+}
+.current-user-display .avatar-mini {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: var(--primary-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.8rem;
+    font-weight: 600;
+    overflow: hidden;
+}
+.current-user-display:hover .avatar-mini {
+    background: var(--text-light);
+    color: var(--primary-color);
+}
+
+/* -------------------- 3. Messenger Grid -------------------- */
+.messaging-container {
+    display: grid;
+    height: calc(100vh - 200px); 
+    grid-template-columns: 320px 1fr 280px; 
+    grid-template-areas: "list chat details"; 
+    background-color: var(--dark-card); 
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+    border: 1px solid var(--border-color);
+    transition: grid-template-columns 0.3s ease-in-out;
+}
+
+/* -------------------- 4. Chat List Panel -------------------- */
+.chat-list-panel {
+    grid-area: list;
+    border-right: 1px solid var(--border-color);
+    padding: 15px 0;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden; 
+}
+.chat-list-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 25px;
+    flex-shrink: 0;
+}
+.chat-list-header h2 { color: var(--text-light); margin: 0; }
+.header-actions { display: flex; gap: 10px; }
+.btn-icon {
+    background: var(--bg-input);
+    color: var(--text-gray);
+    border: none;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.btn-icon:hover { background: var(--bg-hover); color: var(--text-light); }
+.search-bar { padding: 0 25px 15px; flex-shrink: 0; }
+.search-bar input {
+    width: 100%;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 20px; 
+    background-color: var(--bg-input); 
+    color: var(--text-light);
+    outline: none;
+}
+.chat-list {
+    overflow-y: auto;
+    flex-grow: 1;
+    scrollbar-width: thin;
+    scrollbar-color: var(--bg-hover) var(--dark-card);
+}
+.chat-item {
+    display: flex;
+    align-items: center;
+    padding: 10px 25px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    border-radius: 8px;
+    margin: 0 10px;
+}
+.chat-item:hover { background-color: var(--bg-hover); }
+.chat-item.active { background-color: var(--primary-light); }
+.chat-avatar {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+    color: white;
+    font-size: 20px;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 15px;
+    flex-shrink: 0;
+    overflow: hidden;
+}
+.chat-info { flex-grow: 1; min-width: 0; }
+.chat-name { font-size: 16px; font-weight: 600; color: var(--text-light); margin: 0; }
+.last-message {
+    font-size: 13px;
+    color: var(--text-gray);
+    margin: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.chat-meta {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    margin-left: 10px;
+    flex-shrink: 0;
+}
+.chat-time { font-size: 11px; color: var(--text-gray); }
+.chat-unread-count {
+    background-color: var(--primary-color); 
+    color: white;
+    font-size: 11px;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 5px;
+    font-weight: bold;
+}
+
+/* -------------------- 5. Chat Window Panel -------------------- */
+.chat-window-panel {
+    grid-area: chat;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    overflow: hidden; 
+    background-color: var(--dark-bg); 
+}
+.chat-placeholder {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    color: var(--text-gray);
+}
+.placeholder-icon { font-size: 4rem; margin-bottom: 1rem; opacity: 0.5; }
+.chat-empty-state { text-align: center; color: var(--text-gray); padding: 20px; }
+.chat-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 30px; 
+    border-bottom: 1px solid var(--border-color);
+    background-color: var(--dark-card); 
+    z-index: 10;
+    flex-shrink: 0;
+}
+.chat-header-info { display: flex; align-items: center; gap: 12px; }
+.chat-header-info .chat-avatar { width: 40px; height: 40px; font-size: 16px; margin: 0; }
+.chat-header-info h3 { margin: 0; font-size: 17px; color: var(--text-light); }
+.chat-status { font-size: 12px; color: var(--text-gray); margin: 0; }
+.chat-header-actions { display: flex; gap: 10px; }
+
+/* Message Area */
+.message-area {
+    flex-grow: 1;
+    padding: 20px 30px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 4px; 
+}
+.message-bubble {
+    padding: 8px 14px; 
+    border-radius: 20px;
+    line-height: 1.5;
+    font-size: 15px;
+    word-wrap: break-word;
+    position: relative;
+    cursor: pointer;
+}
+.bubble-content-wrapper { display: flex; flex-direction: column; }
+.message-bubble p { margin: 0; }
+.message-time {
+    display: block;
+    font-size: 10px;
+    color: var(--text-gray); 
+    text-align: right;
+    margin-top: 3px;
+}
+.message-bubble.incoming { background-color: var(--bg-input); color: var(--text-light); align-self: flex-start; }
+.message-bubble.outgoing { background: var(--primary-color); color: white; align-self: flex-end; }
+.message-bubble.outgoing .message-time { color: rgba(255, 255, 255, 0.8); }
+
+/* Input Area */
+.message-input-area {
+    padding: 15px 30px;
+    border-top: 1px solid var(--border-color);
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    background-color: var(--dark-card);
+    flex-shrink: 0;
+    position: relative;
+    z-index: 60;
+}
+.message-input-area input {
+    flex-grow: 1;
+    padding: 12px 20px;
+    border-radius: 25px;
+    border: none; 
+    background-color: var(--bg-input);
+    color: var(--text-light);
+    font-size: 15px;
+    outline: none;
+}
+.message-input-area .btn-send { background: none; color: var(--primary-color); font-size: 1.5rem; }
+.message-input-area .btn-icon:hover { background: none; color: var(--primary-color); }
+
+/* -------------------- 6. Chat Details Panel -------------------- */
+.chat-details-panel {
+    grid-area: details;
+    border-left: 1px solid var(--border-color);
+    padding: 25px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    overflow-y: auto;
+    background-color: var(--dark-card); 
+    transition: all 0.3s ease-in-out;
+}
+.details-header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 20px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--border-color);
+    width: 100%;
+}
+.details-avatar {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+    color: white;
+    font-size: 36px;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 15px;
+    overflow: hidden;
+}
+.details-header h3 { margin: 0; font-size: 1.2rem; color: var(--text-light); }
+.details-actions {
+    display: flex;
+    justify-content: space-around;
+    width: 100%;
+    margin-bottom: 20px;
+}
+.action-button {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+    cursor: pointer;
+    color: var(--text-gray);
+    font-size: 0.8rem;
+    transition: color 0.2s;
+    text-decoration: none;
+}
+.action-button:hover { color: var(--text-light); }
+.action-button .icon {
+    font-size: 1.2rem;
+    background-color: var(--bg-input);
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.details-accordion { width: 100%; }
+.accordion-item { margin-bottom: 5px; }
+.accordion-header {
+    width: 100%;
+    background: none;
+    border: none;
+    color: var(--text-light);
+    padding: 15px;
+    display: flex;
+    justify-content: space-between;
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    border-radius: 8px;
+    transition: background-color 0.2s;
+}
+.accordion-header:hover { background-color: var(--bg-hover); }
+.accordion-icon { transition: transform 0.3s ease; }
+.accordion-header.active .accordion-icon { transform: rotate(180deg); }
+
+/* -------------------- 7. JS Toggle Styles -------------------- */
+.messaging-container.details-hidden { grid-template-columns: 320px 1fr 0px; }
+.messaging-container.details-hidden .chat-details-panel { display: none; opacity: 0; padding: 0; }
+
+/* -------------------- 8. Responsive -------------------- */
+@media (max-width: 1200px) {
+    .messaging-container { grid-template-columns: 320px 1fr 0px; }
+    .messaging-container .chat-details-panel { display: none; }
+    .chat-header-actions #toggleDetailsButton { display: flex; }
+}
+@media (max-width: 768px) {
+    .body.no-sidebar-layout .main-content.full-width-layout { padding: 2rem 15px 2.5rem 15px; }
+    .page-top-controls { flex-direction: column; align-items: stretch; gap: 15px; min-height: 0; padding-top: 0; }
+    .page-top-controls .btn-back { order: 1; text-align: center; }
+    .page-top-controls .current-user-display { order: 2; justify-content: center; }
+    .page-top-controls .section-header { order: 3; text-align: center; }
+    .messaging-container { grid-template-columns: 1fr; grid-template-areas: "list" "chat"; height: auto; min-height: calc(100vh - 250px); }
+    .chat-list-panel { border-right: none; border-bottom: 1px solid var(--border-color); min-height: 200px; padding: 15px 0; }
+    .chat-window-panel { height: calc(100vh - 450px); }
+    .chat-details-panel { display: none; }
+}
+
+/* -------------------- 9. Modals -------------------- */
+.modal-overlay {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0, 0, 0, 0.7); display: none; align-items: center; justify-content: center; z-index: 1000;
+}
+.modal-content {
+    background: var(--dark-card); padding: 25px; border-radius: 12px; width: 90%; max-width: 400px;
+    text-align: center; border: 1px solid var(--border-color);
+}
+.modal-content h3 { color: var(--text-light); margin-top: 0; }
+.modal-content p { color: var(--text-gray); margin-bottom: 20px; }
+.modal-options { display: flex; gap: 15px; margin-bottom: 25px; }
+.modal-option {
+    flex: 1; background: var(--bg-input); padding: 20px; border-radius: 8px;
+    cursor: pointer; transition: background-color 0.2s; color: var(--text-light);
+}
+.modal-option:hover { background-color: var(--bg-hover); }
+.modal-option span { display: block; }
+.modal-option span:first-child { font-size: 2rem; margin-bottom: 10px; }
+.modal-close-btn {
+    background: var(--primary-color); color: white; border: none; padding: 10px 20px; border-radius: 8px;
+    cursor: pointer; font-weight: 500; transition: background-color 0.2s;
+}
+.modal-close-btn:hover { opacity: 0.9; }
+
+/* -------------------- 10. File Styles -------------------- */
+.chat-image { max-width: 100%; border-radius: 15px; margin-top: 5px; cursor: pointer; }
+.chat-file-link {
+    display: flex; align-items: center; background-color: rgba(0, 0, 0, 0.2); padding: 10px 15px; border-radius: 10px; text-decoration: none; color: inherit; transition: background-color 0.2s;
+}
+.message-bubble.incoming .chat-file-link { color: var(--text-light); }
+.message-bubble.outgoing .chat-file-link { color: white; }
+.chat-file-link:hover { background-color: rgba(0, 0, 0, 0.4); }
+.chat-file-link .file-icon { font-size: 1.5rem; margin-right: 10px; }
+.chat-file-link .file-name { font-size: 0.9rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+/* -------------------- 11. Notifications -------------------- */
+#notification-container { position: fixed; bottom: 20px; right: 20px; z-index: 2000; display: flex; flex-direction: column; gap: 10px; }
+.notification-popup {
+    width: 350px; background-color: var(--dark-card); border: 1px solid var(--border-color); border-radius: 12px;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3); display: flex; align-items: flex-start; padding: 15px; cursor: pointer;
+    opacity: 0; transform: translateX(100%); transition: all 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+}
+.notification-popup.show { opacity: 1; transform: translateX(0); }
+.notif-icon { font-size: 1.5rem; margin-right: 15px; color: var(--primary-color); }
+.notif-content { flex-grow: 1; }
+.notif-content strong { color: var(--text-light); font-size: 1rem; }
+.notif-content p { color: var(--text-gray); font-size: 0.9rem; margin: 3px 0 0 0; }
+.notif-close { font-size: 1.5rem; color: var(--text-gray); cursor: pointer; transition: color 0.2s; }
+.notif-close:hover { color: var(--text-light); }
+
+/* -------------------- 12. Search -------------------- */
+.convo-search-container { display: flex; padding: 10px 30px; background-color: var(--dark-card); border-bottom: 1px solid var(--border-color); gap: 10px; }
+#convoSearchInput { flex-grow: 1; padding: 8px 15px; border-radius: 20px; border: none; background-color: var(--bg-input); color: var(--text-light); font-size: 14px; outline: none; }
+.message-bubble span.highlight { background-color: #f59e0b; color: var(--dark-bg); border-radius: 3px; }
+
+/* -------------------- 13. Context Menu -------------------- */
+.message-context-menu {
+    position: absolute; background: var(--dark-card); border: 1px solid var(--border-color); border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3); z-index: 100; padding: 5px; display: none; min-width: 150px;
+}
+.context-menu-option { padding: 8px 12px; color: var(--text-light); cursor: pointer; border-radius: 4px; font-size: 0.9rem; }
+.context-menu-option:hover { background: var(--bg-hover); }
+.context-menu-option.danger { color: #ef4444; }
+.context-menu-option.danger:hover { background: rgba(239, 68, 68, 0.1); }
+
+/* -------------------- 14. Image Preview -------------------- */
+.image-preview-modal { background: rgba(0, 0, 0, 0.85); cursor: zoom-out; }
+#fullScreenImage { max-width: 90vw; max-height: 90vh; border-radius: 8px; object-fit: contain; }
+.image-preview-modal .modal-close-btn { position: absolute; top: 20px; right: 30px; font-size: 2.5rem; color: white; background: none; border: none; cursor: pointer; }
+
+/* -------------------- 15. Media & Files Tab -------------------- */
+/* Tabs Container */
+
+/* List for Files */
+#media-tab-files { display: flex; flex-direction: column; gap: 5px; }
+
+/* -------------------- 16. Reactions & Actions -------------------- */
+.message-wrapper { position: relative; display: flex; flex-direction: column; margin-bottom: 8px; max-width: 70%; }
+.message-wrapper.outgoing { align-self: flex-end; }
+.message-wrapper.incoming { align-self: flex-start; }
+.message-wrapper.actions-visible .message-actions { opacity: 1; pointer-events: auto; transform: translateY(-50%) scale(1); }
+.message-actions {
+    opacity: 0; pointer-events: none; transform: translateY(-50%) scale(0.9); transition: opacity 0.15s ease, transform 0.15s ease;
+    display: flex; position: absolute; top: 50%; z-index: 5; background: var(--dark-card); border-radius: 20px; box-shadow: 0 2px 5px rgba(0,0,0,0.3); padding: 4px 6px; gap: 4px;
+}
+.message-wrapper.outgoing .message-actions { right: 100%; margin-right: 8px; }
+.message-wrapper.incoming .message-actions { left: 100%; margin-left: 8px; }
+.btn-react-emoji, .btn-reply, .btn-bubble-menu { background: none; border: none; font-size: 1.2rem; cursor: pointer; padding: 6px; border-radius: 50%; transition: all 0.2s ease; color: var(--text-gray); width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; }
+.btn-react-emoji:hover, .btn-reply:hover, .btn-bubble-menu:hover { transform: scale(1.1); background: var(--bg-hover); color: var(--text-light); }
+/* Reaction Picker */
+.reaction-picker {
+    position: absolute; z-index: 101; background: var(--dark-card); padding: 8px; border-radius: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+    display: flex; gap: 8px; opacity: 0; transform: translateY(10px); transition: opacity 0.2s ease, transform 0.2s ease; display: none;
+}
+.reaction-picker.visible { display: flex; opacity: 1; transform: translateY(0); }
+.reaction-emoji { background: none; border: none; font-size: 1.5rem; cursor: pointer; padding: 5px; border-radius: 50%; transition: transform 0.1s ease; }
+.reaction-emoji:hover { transform: scale(1.3); }
+/* Reactions Display */
+.message-reaction {
+    position: absolute; bottom: -12px; right: 10px; display: flex; gap: 4px; z-index: 10; pointer-events: auto;
+}
+.message-reaction-item {
+    background: var(--dark-card); border: 1px solid var(--border-color); border-radius: 12px; font-size: 0.75rem; padding: 2px 6px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.3); cursor: pointer; transition: transform 0.2s; display: inline-flex; align-items: center; white-space: nowrap;
+}
+.message-reaction-item:hover { transform: scale(1.1); border-color: var(--primary-color); }
+.message-reaction-item.my-reaction { background: rgba(99, 102, 241, 0.2); border-color: var(--primary-color); color: var(--text-light); }
+.message-bubble.incoming .message-reaction { left: 5px; right: auto; }
+
+/* -------------------- 17. Reply Preview -------------------- */
+.reply-preview-bar {
+    display: none; position: absolute; bottom: 70px; left: 0; width: 100%; background-color: var(--dark-card);
+    padding: 10px 20px; border-left: 5px solid var(--primary-color); border-top: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 -4px 10px rgba(0, 0, 0, 0.2); z-index: 50; justify-content: space-between; align-items: center; animation: slideUp 0.2s ease-out;
+}
+.reply-preview-bar.active { display: flex; }
+.reply-preview-content { flex-grow: 1; overflow: hidden; }
+.reply-preview-content strong { display: block; color: var(--primary-color); font-size: 0.9rem; margin-bottom: 2px; }
+.reply-preview-content p { margin: 0; color: var(--text-gray); font-size: 0.85rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+#cancelReplyButton { background: none; border: none; font-size: 1.5rem; color: var(--text-gray); cursor: pointer; padding: 0 10px; transition: color 0.2s; }
+#cancelReplyButton:hover { color: var(--danger); }
+/* Inline Reply */
+.inline-reply-preview {
+    font-size: 0.85em; background: rgba(0,0,0,0.15); padding: 8px; border-left: 3px solid var(--text-gray); margin-bottom: 8px; border-radius: 4px;
+}
+.inline-reply-preview strong { color: var(--primary-color); display: block; margin-bottom: 2px; }
+.inline-reply-preview div { color: var(--text-gray); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+/* -------------------- 18. Download Button -------------------- */
+.btn-download-image {
+    position: absolute; bottom: 30px; left: 50%; transform: translateX(-50%);
+    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+    color: white; padding: 12px 24px; border-radius: 30px; text-decoration: none; font-weight: 600; font-size: 1rem;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5); border: 1px solid rgba(255, 255, 255, 0.2);
+    display: flex; align-items: center; gap: 8px; transition: all 0.2s ease; z-index: 1002;
+}
+.btn-download-image:hover { transform: translateX(-50%) scale(1.05); box-shadow: 0 6px 20px rgba(99, 102, 241, 0.6); }
+
+/* Animation */
+@keyframes slideUp { from { transform: translateY(10px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+/* =========================================
+   IMAGE GALLERY NAVIGATION (Add to css/messaging.css)
+   ========================================= */
+
+.nav-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+    color: white;
+    border: none;
+    font-size: 2.5rem;
+    padding: 15px 20px;
+    cursor: pointer;
+    z-index: 1003; /* Above the image */
+    border-radius: 50%;
+    transition: background 0.2s ease;
+    user-select: none; /* Para di ma-highlight text pag nagki-click */
+}
+
+.nav-btn:hover {
+    background-color: rgba(255, 255, 255, 0.3);
+}
+
+.prev-btn {
+    left: 20px;
+}
+
+.next-btn {
+    right: 20px;
+}
+
+/* Responsive Image adjustment */
+#fullScreenImage {
+    max-width: 80vw; /* Liitan konti para di matakpan ng arrows */
+    max-height: 85vh;
+}
+/* Highlight style para sa Search */
+.highlight-text {
+    background-color: #f59e0b;
+    color: black;
+    font-weight: bold;
+    padding: 0 2px;
+    border-radius: 2px;
+}
+
+/* =====================================
+   SIDEBAR BADGE STYLE
+   ===================================== */
+.nav-item {
+    position: relative; /* Needed for badge positioning */
+    display: flex;
+    justify-content: space-between; /* Space between label and badge */
+}
+
+.nav-badge {
+    background-color: var(--error-color); /* Red */
+    color: white;
+    font-size: 0.75rem;
+    font-weight: bold;
+    padding: 2px 8px;
+    border-radius: 12px;
+    min-width: 20px;
+    text-align: center;
+    display: none; /* Hidden by default */
+    animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.nav-badge.visible {
+    display: inline-block;
+}
+
+@keyframes popIn {
+    from { transform: scale(0); }
+    to { transform: scale(1); }
+}/* STATUS INDICATORS */
+.chat-status {
+    font-size: 12px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin: 0;
+}
+
+.status-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    display: inline-block;
+    background-color: #94a3b8; /* Default Gray */
+}
+
+/* =========================================
+   STATUS INDICATORS (Add to end of file)
+   ========================================= */
+.chat-status {
+    font-size: 12px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin: 0;
+    transition: color 0.3s ease;
+}
+
+.status-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    display: inline-block;
+    background-color: #94a3b8; /* Default Gray */
+}
+
+/* Online Style */
+.chat-status.online {
+    color: #10b981; /* Green Text */
+}
+.chat-status.online .status-dot {
+    background-color: #10b981; /* Green Dot */
+    box-shadow: 0 0 6px rgba(16, 185, 129, 0.6); /* Glow effect */
+}
+
+/* Offline Style */
+.chat-status.offline {
+    color: #ef4444; /* Red Text */
+}
+.chat-status.offline .status-dot {
+    background-color: #ef4444; /* Red Dot */
+}
+/* =========================================
+   CHAT LIST STATUS INDICATOR
+   ========================================= */
+
+/* Siguraduhin na relative ang parent para ma-position ang dot */
+.chat-avatar {
+    position: relative; 
+    overflow: visible; /* Allow dot to sit on the edge */
+}
+
+/* The Status Dot Style */
+.chat-list-status {
+    position: absolute;
+    bottom: 2px;
+    right: 0px;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    border: 2px solid var(--dark-card); /* Border para humiwalay sa avatar */
+    z-index: 5;
+    transition: background-color 0.3s ease;
+}
+
+/* Colors */
+.chat-list-status.online {
+    background-color: #10b981; /* Green */
+    box-shadow: 0 0 0 2px rgba(30, 41, 59, 0.5); /* Extra outline for contrast */
+}
+
+.chat-list-status.offline {
+    background-color: #94a3b8; /* Gray */
+    /* display: none; */ /* Optional: Tanggalin ang comment kung gusto mong itago pag offline */
+}
+
+/* --- UNSENT MESSAGE --- */
+.unsent-bubble {
+    background-color: transparent !important;
+    border: 1px solid var(--border-color);
+    color: var(--text-gray);
+    font-style: italic;
+    opacity: 0.7;
+}
+
+/* --- PREVIEW MODAL STYLES --- */
+.preview-top-bar {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    padding: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 1005;
+}
+
+.preview-menu {
+    position: absolute;
+    top: 60px;
+    right: 20px;
+    background: var(--dark-card);
+    border-radius: 8px;
+    width: 200px;
+    display: none; /* Hidden by default */
+    flex-direction: column;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+    border: 1px solid var(--border-color);
+    z-index: 1006;
+}
+.preview-menu.active { display: flex; }
+
+.menu-info { padding: 10px; font-size: 0.85rem; color: var(--text-gray); }
+.menu-info strong { display: block; color: var(--text-light); margin-bottom: 2px; overflow: hidden; text-overflow: ellipsis; }
+
+.menu-item {
+    background: none; border: none; color: var(--text-light); text-align: left;
+    padding: 10px; cursor: pointer; font-size: 0.9rem; transition: background 0.2s;
+}
+.menu-item:hover { background: var(--bg-hover); }
+.menu-item.danger { color: #ef4444; }
+
+/* =========================================
+   PREVIEW MODAL & 3-DOTS MENU (Fixed)
+   ========================================= */
+
+/* Top Bar Container */
+.preview-top-bar {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    padding: 20px;
+    display: flex;
+    justify-content: space-between; /* Close sa kaliwa, Dots sa kanan */
+    align-items: flex-start;
+    z-index: 2000; /* Mataas para nasa ibabaw ng image */
+    pointer-events: none; /* Para ma-click ang image sa likod kung wala sa button */
+}
+
+/* Enable clicks for buttons inside the bar */
+.preview-top-bar .modal-close-btn,
+.preview-top-bar .preview-actions {
+    pointer-events: auto;
+}
+
+/* Close Button (Override) */
+.image-preview-modal .modal-close-btn {
+    position: static; /* Reset absolute positioning */
+    font-size: 3rem;
+    line-height: 0.8;
+    background: rgba(0,0,0,0.4);
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s;
+}
+.image-preview-modal .modal-close-btn:hover {
+    background: rgba(255, 68, 68, 0.8);
+}
+
+/* 3-Dots Button (Pinalaki at Ginawang Visible) */
+#previewMoreBtn {
+    width: 50px;
+    height: 50px;
+    font-size: 2rem; /* Malaki ang text */
+    background-color: rgba(0, 0, 0, 0.6); /* Dark background */
+    color: white;
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+}
+
+#previewMoreBtn:hover {
+    background-color: var(--primary-color);
+    transform: scale(1.1);
+}
+
+/* Dropdown Menu */
+.preview-menu {
+    position: absolute;
+    top: 60px; /* Sa ilalim ng button */
+    right: 0;
+    background: var(--dark-card);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    width: 220px;
+    display: none; /* Hidden default */
+    flex-direction: column;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+    z-index: 2001;
+    overflow: hidden;
+}
+
+.preview-menu.active {
+    display: flex;
+    animation: fadeIn 0.2s ease;
+}
+
+.menu-info {
+    padding: 15px;
+    border-bottom: 1px solid var(--border-color);
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.menu-info strong {
+    display: block;
+    color: var(--text-light);
+    font-size: 0.95rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.menu-info span {
+    font-size: 0.8rem;
+    color: var(--text-gray);
+}
+
+.menu-item {
+    background: transparent;
+    border: none;
+    color: var(--text-light);
+    padding: 12px 15px;
+    text-align: left;
+    cursor: pointer;
+    font-size: 0.95rem;
+    transition: background 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.menu-item:hover {
+    background: var(--bg-hover);
+}
+
+.menu-item.danger {
+    color: #ef4444;
+}
+.menu-item.danger:hover {
+    background: rgba(239, 68, 68, 0.1);
+}
+
+/* MODAL BUTTON STYLES */
+.modal-options .btn-secondary {
+    border: 1px solid var(--text-gray);
+    color: var(--text-gray);
+    background: transparent;
+    cursor: pointer;
+}
+.modal-options .btn-danger {
+    background: var(--color-unread);
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+/* =========================================
+   TOAST NOTIFICATION VARIANTS
+   ========================================= */
+
+/* Warning Style (Para sa Mute 🔕) - Orange/Red */
+.toast-notification.toast-warning {
+    border-left-color: #f59e0b; /* Amber color */
+}
+.toast-notification.toast-warning .toast-icon {
+    color: #f59e0b;
+    background: rgba(245, 158, 11, 0.1); /* Light orange background sa icon */
+    border-radius: 50%;
+    width: 35px;
+    height: 35px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Success Style (Para sa Unmute 🔔) - Green */
+.toast-notification.toast-success {
+    border-left-color: #10b981; /* Emerald color */
+}
+.toast-notification.toast-success .toast-icon {
+    color: #10b981;
+    background: rgba(16, 185, 129, 0.1); /* Light green background sa icon */
+    border-radius: 50%;
+    width: 35px;
+    height: 35px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+/* =========================================
+   LAYOUT CENTERING (Added Fix)
+   ========================================= */
+
+/* 1. Center the Main Content Wrapper */
+.body.no-sidebar-layout .main-content.full-width-layout {
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Center horizontally */
+    width: 100%;
+    padding: 1rem 2rem; /* Konting space sa gilid */
+}
+
+/* 2. Control the Messaging Section Width */
+#messaging-section {
+    width: 100%;
+    max-width: 1400px; /* Pigilan sumobra lapad sa 4k screens */
+    margin: 0 auto;    /* Center sa gitna */
+    display: flex;
+    flex-direction: column;
+}
+
+/* 3. Ensure Top Controls align with the chat box */
+
+    .page-top-controls {
+    width: 100%;
+    max-width: 100%;
+    margin-bottom: 15px;
+    border-radius: 16px;
+}
+
+
+/* 4. Adjust Container Height to fit Screen */
+.messaging-container {
+    width: 100%;
+    /* Bawasan ang height para hindi lumabas ang double scrollbar */
+    height: calc(100vh - 150px); 
+    min-height: 600px; /* Minimum height para di masira */
+}
+
+/* Responsive adjustment para sa laptop/maliit na screen */
+@media (max-height: 800px) {
+    .messaging-container {
+        height: calc(100vh - 120px);
+    }
+}
+/* Idagdag ito sa dulo ng css/messaging.css */
+
+/* Kulay Orange para sa Mute */
+.toast-notification.toast-warning {
+    border-left-color: #f59e0b;
+}
+.toast-notification.toast-warning .toast-icon {
+    color: #f59e0b;
+    background: rgba(245, 158, 11, 0.1);
+    border-radius: 50%;
+    width: 35px;
+    height: 35px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Kulay Green para sa Unmute */
+.toast-notification.toast-success {
+    border-left-color: #10b981;
+}
+.toast-notification.toast-success .toast-icon {
+    color: #10b981;
+    background: rgba(16, 185, 129, 0.1);
+    border-radius: 50%;
+    width: 35px;
+    height: 35px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+/* =========================================
+   TOAST NOTIFICATION COLORS
+   ========================================= */
+
+/* Mute (Warning/Orange) */
+.toast-notification.toast-warning {
+    border-left: 5px solid #f59e0b !important;
+}
+.toast-notification.toast-warning .toast-icon {
+    color: #f59e0b !important;
+}
+
+/* Unmute (Success/Green) */
+.toast-notification.toast-success {
+    border-left: 5px solid #10b981 !important;
+}
+.toast-notification.toast-success .toast-icon {
+    color: #10b981 !important;
+}
+/* =========================================
+   SCROLL TO BOTTOM BUTTON & UNREAD DIVIDER
+   ========================================= */
+
+/* =========================================
+   SCROLL TO BOTTOM BUTTON (Big & Centered)
+   ========================================= */
+
+.btn-scroll-bottom {
+    position: absolute;
+    bottom: 90px;          /* Position above the input area */
+    left: 50%;             /* Move to the center horizontal line */
+    transform: translateX(-50%); /* Perfect center alignment */
+    
+    width: 50px;           /* Bigger width */
+    height: 50px;          /* Bigger height */
+    font-size: 1.5rem;     /* Bigger arrow icon */
+    
+    background-color: var(--dark-card);
+    border: 2px solid var(--primary-color); /* Made border slightly thicker/colored */
+    color: var(--primary-color);
+    border-radius: 50%;
+    display: none;         /* Hidden by default */
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.5); /* Stronger shadow */
+    z-index: 90;
+    transition: all 0.3s ease;
+}
+
+.btn-scroll-bottom:hover {
+    background-color: var(--primary-color);
+    color: white;
+    /* Important: Keep translateX(-50%) to stay centered while adding translateY */
+    transform: translateX(-50%) translateY(-5px); 
+    box-shadow: 0 6px 20px rgba(99, 102, 241, 0.6);
+}
+
+.btn-scroll-bottom.show {
+    display: flex;
+    animation: popInBottom 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+@keyframes popInBottom {
+    from { opacity: 0; transform: translateX(-50%) scale(0.5); }
+    to { opacity: 1; transform: translateX(-50%) scale(1); }
+}
+
+/* Unread Messages Line */
+.unread-divider {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 20px 0;
+    position: relative;
+    width: 100%;
+}
+
+.unread-divider::before,
+.unread-divider::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background-color: var(--color-unread);
+    opacity: 0.5;
+}
+
+.unread-divider span {
+    background-color: rgba(239, 68, 68, 0.1); /* Red tint */
+    color: var(--color-unread);
+    font-size: 0.75rem;
+    font-weight: 600;
+    padding: 4px 12px;
+    border-radius: 12px;
+    border: 1px solid var(--color-unread);
+    margin: 0 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+/* ... [Append to your existing CSS] ... */
+
+/* NEW CHAT MODAL */
+.new-chat-content {
+    width: 500px;
+    max-width: 95%;
+    padding: 0;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+    height: 600px; /* Fixed height */
+}
+
+.modal-header {
+    padding: 15px 20px;
+    border-bottom: 1px solid var(--border-color);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.modal-body {
+    padding: 15px 20px;
+    flex-grow: 1;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+}
+
+/* CHIPS INPUT AREA */
+.selected-users-area {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--border-color);
+    align-items: center;
+}
+
+.placeholder-text {
+    color: var(--text-gray);
+    margin-right: 5px;
+}
+
+#userSearchInput {
+    border: none;
+    background: transparent;
+    color: var(--text-light);
+    flex-grow: 1;
+    min-width: 100px;
+    outline: none;
+    font-size: 1rem;
+    padding: 5px;
+}
+
+.user-chip {
+    background: rgba(99, 102, 241, 0.2);
+    color: var(--primary-color);
+    padding: 4px 10px;
+    border-radius: 15px;
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.user-chip .remove-chip {
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 1rem;
+}
+.user-chip .remove-chip:hover { color: white; }
+
+/* SEARCH RESULTS */
+.search-results-list {
+    margin-top: 10px;
+    flex-grow: 1;
+    overflow-y: auto;
+}
+
+.search-result-item {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    cursor: pointer;
+    border-radius: 8px;
+    transition: background 0.2s;
+}
+.search-result-item:hover { background: var(--bg-hover); }
+
+.default-avatar-small, .avatar-img-small {
+    width: 36px; height: 36px; border-radius: 50%; margin-right: 10px;
+    background: var(--primary-color); color: white; display: flex; align-items: center; justify-content: center; font-weight: bold;
+}
+
+/* FOOTER */
+.modal-footer {
+    padding: 15px;
+    border-top: 1px solid var(--border-color);
+    text-align: right;
+}
+
+.btn-primary {
+    background: var(--primary-color);
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    opacity: 1;
+}
+.btn-primary:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.group-name-section {
+    margin-top: 15px;
+    padding-top: 15px;
+    border-top: 1px solid var(--border-color);
+}
+.group-name-section label { display: block; margin-bottom: 5px; color: var(--text-gray); font-size: 0.9rem; }
+.group-name-section input { width: 100%; padding: 10px; background: var(--bg-input); border: 1px solid var(--border-color); color: white; border-radius: 6px; }
+
+/* OPTIONS LIST */
+.modal-options-list { display: flex; flex-direction: column; gap: 5px; margin: 20px 0; }
+.modal-option-item { background: var(--bg-input); border: none; padding: 12px; color: var(--text-light); text-align: left; border-radius: 8px; cursor: pointer; transition: background 0.2s; }
+.modal-option-item:hover { background: var(--bg-hover); }
+/* Add to existing CSS */
+
+/* Call Animation */
+@keyframes pulse {
+    0% { opacity: 1; }
+    50% { opacity: 0.5; }
+    100% { opacity: 1; }
+}
+
+/* Member List Styles */
+.member-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px;
+    background: var(--bg-input);
+    border-radius: 8px;
+}
+
+.admin-badge {
+    background: #f59e0b;
+    color: black;
+    font-size: 0.7rem;
+    padding: 2px 6px;
+    border-radius: 4px;
+    margin-left: 5px;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+.btn-view-profile {
+    background: transparent;
+    border: 1px solid var(--primary-color);
+    color: var(--primary-color);
+    padding: 5px 10px;
+    border-radius: 5px;
+    text-decoration: none;
+    font-size: 0.8rem;
+    transition: all 0.2s;
+}
+
+.btn-view-profile:hover {
+    background: var(--primary-color);
+    color: white;
+}
+/* ... Existing CSS ... */
+
+/* NEW: Filter Buttons */
+.chat-filter-buttons {
+    padding: 0 25px 10px 25px; /* Align with search bar padding */
+    display: flex;
+    gap: 8px;
+}
+
+.filter-btn {
+    background-color: var(--bg-input);
+    color: var(--text-gray);
+    border: none;
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.filter-btn:hover {
+    background-color: var(--bg-hover);
+    color: var(--text-light);
+}
+
+.filter-btn.active {
+    background-color: rgba(99, 102, 241, 0.2); /* Light primary tint */
+    color: var(--primary-color);
+}
+/* APPEND TO css/messaging.css */
+
+/* Chat Item Relative Positioning */
+.chat-item {
+    position: relative; /* Necessary for absolute positioning of the button */
+    transition: background-color 0.2s;
+}
+
+/* Meta Info (Time/Unread) - Shown by default */
+.chat-meta {
+    transition: opacity 0.2s;
+    opacity: 1;
+}
+
+/* Three Dots Button - Hidden by default */
+.btn-chat-item-options {
+    display: none;
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: var(--dark-card); /* Match card bg to cover items behind if needed */
+    border: 1px solid var(--border-color);
+    color: var(--text-light);
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 1.2rem;
+    z-index: 20;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+}
+
+.btn-chat-item-options:hover {
+    background: var(--primary-color);
+    color: white;
+    border-color: var(--primary-color);
+}
+
+/* HOVER EFFECT: Hide Meta, Show Button */
+.chat-item:hover .chat-meta {
+    opacity: 0;
+    pointer-events: none;
+}
+.chat-item:hover .btn-chat-item-options {
+    display: flex;
+}
+
+/* Chat List Context Menu (The dropdown) */
+.chat-list-context-menu {
+    position: fixed; /* Fixed to viewport so it floats above everything */
+    background: var(--dark-card);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+    z-index: 9999; /* High Z-Index */
+    display: none;
+    flex-direction: column;
+    min-width: 180px;
+    overflow: hidden;
+}
+
+.chat-list-context-menu.active {
+    display: flex;
+}
+
+.chat-list-option {
+    padding: 12px 15px;
+    text-align: left;
+    background: none;
+    border: none;
+    color: var(--text-light);
+    cursor: pointer;
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    transition: background 0.2s;
+}
+
+.chat-list-option:hover {
+    background: var(--bg-hover);
+}
+
+.chat-list-option.danger {
+    color: #ef4444;
+}
+.chat-list-option.danger:hover {
+    background: rgba(239, 68, 68, 0.1);
+}
+/* ADD TO css/messaging.css */
+
+/* --- SIDEBAR DROPDOWN (Screenshot 1) --- */
+.sidebar-dropdown {
+    position: absolute;
+    top: 70px; /* Adjust based on header height */
+    left: 20px; /* Align with header */
+    width: 280px;
+    background-color: var(--dark-card);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    display: none; /* Hidden by default */
+    z-index: 100;
+    flex-direction: column;
+    padding: 8px;
+}
+.sidebar-dropdown.active { display: flex; }
+.dropdown-item {
+    padding: 12px 15px;
+    color: var(--text-light);
+    cursor: pointer;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 0.95rem;
+    font-weight: 500;
+    transition: background 0.2s;
+}
+.dropdown-item:hover { background-color: var(--bg-hover); }
+.dropdown-item .icon { font-size: 1.2rem; width: 24px; text-align: center; }
+.dropdown-divider { border: 0; border-top: 1px solid var(--border-color); margin: 8px 0; }
+
+/* --- PREFERENCES MODAL (Screenshot 3) --- */
+.preferences-content {
+    width: 500px;
+    max-width: 95%;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    height: 600px; /* Fixed height */
+    text-align: left;
+}
+.pref-header {
+    padding: 15px 20px;
+    border-bottom: 1px solid var(--border-color);
+    display: flex;
+    justify-content: center;
+    position: relative;
+}
+.pref-header h2 { margin: 0; font-size: 1.2rem; }
+.modal-close-btn-icon {
+    position: absolute;
+    right: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: var(--bg-input);
+    border: none;
+    color: var(--text-light);
+    width: 30px; height: 30px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center; font-size: 1.2rem;
+}
+.modal-close-btn-icon:hover { background: var(--bg-hover); }
+.pref-scroll-area { padding: 20px; overflow-y: auto; flex-grow: 1; }
+.pref-section { margin-bottom: 25px; }
+.pref-section h3 { font-size: 0.9rem; color: var(--text-gray); margin-bottom: 10px; text-transform: uppercase; font-weight: 700; }
+.pref-user-row { display: flex; align-items: center; gap: 15px; margin-bottom: 15px; padding: 10px; background: var(--bg-input); border-radius: 12px; }
+.pref-avatar img { width: 50px; height: 50px; border-radius: 50%; object-fit: cover; }
+.pref-info h4 { margin: 0; font-size: 1rem; color: var(--text-light); }
+.pref-info a { font-size: 0.85rem; color: var(--text-gray); text-decoration: none; }
+
+/* Pref Items & Toggles */
+.pref-item {
+    display: flex; justify-content: space-between; align-items: center; padding: 12px 0;
+}
+.pref-label { color: var(--text-light); font-weight: 500; font-size: 1rem; display: flex; flex-direction: column; }
+.pref-label .icon { margin-right: 8px; }
+.pref-sub { font-size: 0.8rem; color: var(--text-gray); margin-top: 2px; }
+.pref-sub-text { font-size: 0.8rem; color: var(--text-gray); margin-top: 10px; line-height: 1.4; }
+
+/* iOS Style Switch */
+.switch { position: relative; display: inline-block; width: 50px; height: 28px; }
+.switch input { opacity: 0; width: 0; height: 0; }
+.slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; transition: .4s; border-radius: 34px; }
+.slider:before { position: absolute; content: ""; height: 22px; width: 22px; left: 3px; bottom: 3px; background-color: white; transition: .4s; border-radius: 50%; }
+input:checked + .slider { background-color: var(--primary-color); }
+input:checked + .slider:before { transform: translateX(22px); }
+
+/* Radio Item Style */
+.radio-item { cursor: pointer; padding: 12px 10px; border-radius: 8px; }
+.radio-item:hover { background: var(--bg-hover); }
+.radio-item input[type="radio"] { transform: scale(1.3); accent-color: var(--text-light); }
+
+/* Scroll Button (Ensure visibility) */
+.btn-scroll-bottom { display: none; }
+.btn-scroll-bottom.show { display: flex; }
+/* --- SIDEBAR DROPDOWN (Screenshot 2 Logic) --- */
+.sidebar-dropdown {
+    position: absolute;
+    top: 70px; /* Tantyahin natin base sa header height mo */
+    left: 20px; 
+    width: 280px;
+    background-color: var(--dark-card);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    display: none; /* Hidden default */
+    z-index: 100;
+    flex-direction: column;
+    padding: 8px;
+}
+.sidebar-dropdown.active { display: flex; }
+
+.dropdown-item {
+    padding: 12px 15px;
+    color: var(--text-light);
+    cursor: pointer;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 0.95rem;
+    font-weight: 500;
+    transition: background 0.2s;
+}
+.dropdown-item:hover { background-color: var(--bg-hover); }
+.dropdown-item .icon { font-size: 1.2rem; width: 24px; text-align: center; }
+.dropdown-divider { border-top: 1px solid var(--border-color); margin: 8px 0; }
+
+/* --- PREFERENCES MODAL (Screenshot 3 Logic) --- */
+.preferences-content {
+    width: 500px;
+    max-width: 95%;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    height: 600px; /* Fixed height para mag scroll sa loob */
+    text-align: left;
+    background: var(--dark-card);
+}
+.pref-header {
+    padding: 15px 20px;
+    border-bottom: 1px solid var(--border-color);
+    display: flex;
+    justify-content: center; /* Center Title */
+    align-items: center;
+    position: relative;
+}
+.pref-header h2 { margin: 0; font-size: 1.2rem; color: var(--text-light); }
+.modal-close-btn-icon {
+    position: absolute;
+    right: 20px;
+    background: var(--bg-input);
+    border: none;
+    color: var(--text-light);
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center; font-size: 1.2rem;
+}
+.modal-close-btn-icon:hover { background: var(--bg-hover); }
+
+.pref-scroll-area { padding: 20px; overflow-y: auto; flex-grow: 1; }
+.pref-section { margin-bottom: 25px; }
+.pref-section h3 { font-size: 0.9rem; color: var(--text-gray); margin-bottom: 10px; text-transform: uppercase; font-weight: 700; }
+
+.pref-user-row { 
+    display: flex; align-items: center; gap: 15px; margin-bottom: 15px; 
+    padding: 10px; background: var(--bg-input); border-radius: 12px; 
+}
+.pref-avatar { width: 50px; height: 50px; border-radius: 50%; overflow: hidden; }
+.pref-info h4 { margin: 0; font-size: 1rem; color: var(--text-light); }
+.pref-info a { font-size: 0.85rem; color: var(--text-gray); text-decoration: none; }
+
+/* Pref Items & Toggles */
+.pref-item {
+    display: flex; justify-content: space-between; align-items: center; padding: 12px 0;
+}
+.pref-label { color: var(--text-light); font-weight: 500; font-size: 1rem; display: flex; flex-direction: column; }
+.pref-sub { font-size: 0.8rem; color: var(--text-gray); margin-top: 4px; line-height: 1.3; }
+.pref-sub-text { font-size: 0.85rem; color: var(--text-gray); }
+
+/* iOS Style Switch */
+.switch { position: relative; display: inline-block; width: 50px; height: 28px; flex-shrink: 0; }
+.switch input { opacity: 0; width: 0; height: 0; }
+.slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #475569; transition: .4s; border-radius: 34px; }
+.slider:before { position: absolute; content: ""; height: 22px; width: 22px; left: 3px; bottom: 3px; background-color: white; transition: .4s; border-radius: 50%; }
+input:checked + .slider { background-color: var(--primary-color); }
+input:checked + .slider:before { transform: translateX(22px); }
+
+/* Radio Item Style */
+.radio-item { cursor: pointer; padding: 12px 10px; border-radius: 8px; justify-content: space-between; width: 100%; box-sizing: border-box; }
+.radio-item:hover { background: var(--bg-hover); }
+.radio-item input[type="radio"] { transform: scale(1.3); accent-color: var(--primary-color); }
+/* =========================================
+   MODAL UI POLISH (New Chat & Members)
+   ========================================= */
+
+/* General Modal Clean-up */
+.modal-content {
+    border: none;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+    border-radius: 16px;
+    background: var(--dark-card);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.modal-header {
+    padding: 18px 24px;
+    border-bottom: 1px solid var(--border-color);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.modal-header h3 { font-size: 1.25rem; font-weight: 700; margin: 0; color: var(--text-light); }
+
+.modal-close-btn {
+    background: transparent; color: var(--text-gray); font-size: 1.5rem;
+    border: none; width: 36px; height: 36px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center; transition: all 0.2s;
+}
+.modal-close-btn:hover { background: var(--bg-hover); color: var(--text-light); }
+
+/* --- NEW CHAT MODAL SPECIFIC --- */
+.selected-users-area {
+    display: flex; flex-wrap: wrap; gap: 6px; padding: 10px 0;
+    border-bottom: 1px solid var(--border-color); margin-bottom: 10px;
+    align-items: center;
+}
+.placeholder-text { color: var(--text-gray); margin-right: 8px; font-weight: 500; }
+
+#userSearchInput {
+    flex-grow: 1; background: transparent; border: none; color: var(--text-light);
+    font-size: 1rem; padding: 5px; min-width: 120px; outline: none;
+}
+#userSearchInput::placeholder { color: var(--text-gray); opacity: 0.6; }
+
+.user-chip {
+    background: rgba(99, 102, 241, 0.15); color: #818cf8; 
+    padding: 4px 12px; border-radius: 20px; font-size: 0.9rem; font-weight: 500;
+    display: flex; align-items: center; gap: 6px; transition: background 0.2s;
+}
+.user-chip:hover { background: rgba(99, 102, 241, 0.25); }
+.user-chip .remove-chip { cursor: pointer; font-size: 1.1rem; line-height: 1; opacity: 0.7; }
+.user-chip .remove-chip:hover { opacity: 1; color: white; }
+
+#groupNameSection { margin-top: 15px; animation: fadeIn 0.3s ease; }
+#groupNameInput {
+    width: 100%; padding: 12px 15px; background: var(--bg-input); 
+    border: 1px solid var(--border-color); border-radius: 8px; 
+    color: var(--text-light); outline: none; font-size: 0.95rem;
+    transition: border-color 0.2s;
+}
+#groupNameInput:focus { border-color: var(--primary-color); }
+
+/* --- MEMBERS LIST MODAL SPECIFIC --- */
+.member-item {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 10px 15px; border-radius: 10px; transition: background 0.2s;
+    margin-bottom: 4px; background: transparent; /* Remove default bg */
+}
+.member-item:hover { background: var(--bg-hover); }
+
+.member-info { display: flex; align-items: center; gap: 12px; }
+.member-avatar { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; }
+.member-details { display: flex; flex-direction: column; justify-content: center; }
+.member-name { font-weight: 600; color: var(--text-light); font-size: 0.95rem; }
+.member-role { font-size: 0.8rem; color: var(--text-gray); }
+
+.admin-badge {
+    background: linear-gradient(135deg, #f59e0b, #d97706); color: white;
+    font-size: 0.65rem; padding: 2px 6px; border-radius: 4px;
+    margin-left: 6px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;
+    vertical-align: middle;
+}
+
+.btn-view-profile {
+    background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1);
+    color: var(--text-light); padding: 6px 14px; border-radius: 6px;
+    font-size: 0.85rem; font-weight: 500; text-decoration: none; transition: all 0.2s;
+}
+.btn-view-profile:hover { background: var(--bg-input); border-color: var(--text-gray); }
+
+/* --- FOOTER BUTTON --- */
+.modal-footer { padding: 15px 24px; border-top: 1px solid var(--border-color); text-align: right; }
+.btn-primary {
+    background: var(--primary-color); color: white; border: none;
+    padding: 10px 24px; border-radius: 8px; font-weight: 600;
+    cursor: pointer; transition: transform 0.1s, opacity 0.2s;
+}
+.btn-primary:hover { opacity: 0.9; }
+.btn-primary:disabled { background: #475569; cursor: not-allowed; opacity: 0.7; }
+/* =========================================
+   FIXED IMAGE PREVIEW MODAL STYLES
+   ========================================= */
+
+/* 1. The Black Background Overlay */
+.image-preview-modal {
+    display: none; /* Hidden by default */
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.95) !important; /* Darker background */
+    z-index: 3000 !important;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+/* 2. The Main Image Container */
+.preview-container {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* 3. The Image Itself */
+#fullScreenImage {
+    max-width: 85vw;
+    max-height: 80vh;
+    object-fit: contain;
+    border-radius: 4px;
+    box-shadow: 0 0 20px rgba(0,0,0,0.8);
+    transition: transform 0.2s;
+}
+
+/* 4. Navigation Arrows (Absolute Position para nasa gilid) */
+.nav-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+    border: none;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    font-size: 1.5rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s;
+    z-index: 3001;
+    user-select: none;
+}
+
+.nav-btn:hover {
+    background: rgba(255, 255, 255, 0.3);
+}
+
+.prev-btn { left: 30px; }
+.next-btn { right: 30px; }
+
+/* 5. Top Bar (Close & Menu) */
+.preview-top-bar {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    padding: 20px 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 3002;
+}
+
+.modal-close-btn {
+    color: #fff;
+    font-size: 2rem;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 10px;
+}
+
+/* 6. Download Button at Bottom */
+.btn-download-image {
+    position: absolute;
+    bottom: 30px;
+    background: #6366f1;
+    color: white;
+    padding: 10px 25px;
+    border-radius: 30px;
+    text-decoration: none;
+    font-weight: 600;
+    box-shadow: 0 5px 15px rgba(99, 102, 241, 0.4);
+    z-index: 3002;
+    transition: transform 0.2s;
+}
+.btn-download-image:hover {
+    transform: scale(1.05);
+    background: #4f46e5;
+}
+/* --- RED BADGE STYLES --- */
+
+/* Badge sa ibabaw ng 3-Dots Button */
+.dots-badge {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    background-color: #ef4444 !important; /* Force Red */
+    color: white !important;
+    border-radius: 50%;
+    width: 18px;
+    height: 18px;
+    font-size: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    border: 2px solid var(--dark-card);
+    z-index: 100;
+    pointer-events: none;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+/* Badge sa loob ng Menu (Message Requests 1) */
+.menu-badge-count {
+    background-color: #ef4444 !important; /* Force Red */
+    color: white !important;
+    font-size: 11px;
+    font-weight: bold;
+    padding: 2px 8px;
+    border-radius: 10px;
+    margin-left: auto;
+    display: inline-block;
+}
+/* Force Red Color for Badges */
+.dots-badge, .menu-badge-count {
+    background-color: #ef4444 !important; /* Red color */
+    color: white !important;
+    font-weight: bold;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+}
+
+/* Adjust 3-dots badge position */
+.dots-badge {
+    top: -2px;
+    right: -2px;
+    width: 18px;
+    height: 18px;
+    font-size: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid var(--dark-card);
+}
+/* =========================================
+   FIX: CHAT LIST STATUS DOTS (Green/Grey)
+   ========================================= */
+
+/* 1. Allow dot to sit on top/edge of avatar */
+.chat-avatar {
+    position: relative !important;
+    overflow: visible !important; /* Importante ito para hindi maputol ang dot */
+}
+
+/* 2. The Dot itself */
+.chat-list-status {
+    position: absolute;
+    bottom: 0px;    /* Nasa pinaka-baba */
+    right: 0px;     /* Nasa pinaka-kanan */
+    width: 13px;
+    height: 13px;
+    border-radius: 50%;
+    border: 2px solid var(--dark-card); /* Border na kakulay ng background para may "cutout" effect */
+    z-index: 10;
+    display: block; /* Siguraduhin na nakalitaw */
+}
+
+/* 3. Green for Online */
+.chat-list-status.online {
+    background-color: #10b981 !important; /* Bright Green */
+    box-shadow: 0 0 4px rgba(16, 185, 129, 0.6); /* Konting glow para distinct */
+}
+
+/* 4. Grey for Offline */
+.chat-list-status.offline {
+    background-color: #64748b !important; /* Slate Grey */
+}
+/* =========================================
+   FIX: CHAT LIST STATUS DOTS
+   ========================================= */
+
+/* 1. Siguraduhin na visible ang dot */
+.chat-avatar {
+    position: relative !important;
+    overflow: visible !important; /* Importante para lumitaw */
+}
+
+/* 2. Position at kulay ng dot */
+.chat-list-status {
+    position: absolute;
+    bottom: 2px;
+    right: 2px;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    border: 2px solid var(--dark-card); /* Border para humiwalay sa picture */
+    z-index: 20;
+    display: block;
+}
+
+/* Active / Online (Green) */
+.chat-list-status.online {
+    background-color: #10b981 !important; /* Bright Green */
+    box-shadow: 0 0 0 1px var(--dark-card);
+}
+
+/* Inactive / Offline (Grey) */
+.chat-list-status.offline {
+    background-color: #64748b !important; /* Grey */
+}
+/* =========================================
+   REPLY PREVIEW NAME COLORS
+   ========================================= */
+
+/* 1. Name Color inside messages YOU sent (Outgoing) */
+/* This changes the name of the person you are replying to */
+.message-bubble.outgoing .inline-reply-preview strong {
+    color: #ffffff !important; /* White text to stand out on blue/purple bubble */
+    text-shadow: 0 1px 2px rgba(0,0,0,0.2); /* Optional shadow for readability */
+}
+
+/* 2. Name Color inside messages you RECEIVED (Incoming) */
+/* This changes 'You' or the sender's name inside a grey bubble */
+.message-bubble.incoming .inline-reply-preview strong {
+    color: #8b5cf6 !important; /* Light Purple (Secondary Color) */
+    /* OR use a different color like Orange: */
+    /* color: #f59e0b !important; */ 
+}
+
+/* Optional: Change the border bar color on the left side of the reply */
+.message-bubble.outgoing .inline-reply-preview {
+    border-left-color: rgba(255, 255, 255, 0.5) !important;
+    background: rgba(0, 0, 0, 0.2) !important; /* Slightly darker background for the box */
+}
+
+.message-bubble.incoming .inline-reply-preview {
+    border-left-color: #8b5cf6 !important;
+}
+/* --- CALL LOG CARD STYLES --- */
+.message-bubble.call-log-card {
+    background: #334155; /* Darker background, neutral for log */
+    color: #f8fafc;
+    border-radius: 12px;
+    padding: 10px;
+    max-width: 250px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    position: relative; 
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+.call-log-header {
+    display: flex;
+    align-items: flex-start; /* Align icon and text at the top */
+    gap: 10px;
+}
+
+.log-icon {
+    font-size: 1.5rem;
+    color: #3b82f6; /* Icon color */
+    line-height: 1;
+}
+
+.log-text-content {
+    display: flex;
+    flex-direction: column;
+}
+
+.log-title {
+    font-weight: 600;
+    margin: 0;
+    line-height: 1.2;
+}
+
+.log-duration {
+    font-size: 0.85rem;
+    color: #94a3b8;
+    margin: 0;
+}
+
+/* Call Back Button Style */
+.call-log-button {
+    background: #3b82f6; 
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 8px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.2s;
+    text-align: center;
+}
+
+.call-log-button:hover {
+    background: #2563eb;
+}
+
+/* Time Position (Gaya ng sa screenshot) */
+.message-bubble.call-log-card .message-time {
+    position: absolute;
+    bottom: 5px;
+    right: 10px;
+    font-size: 0.7rem;
+    color: #94a3b8;
+    background: none; 
+    padding: 0;
+}
+
+/* Outgoing Log Style (Para sa sinend mo) */
+.message-wrapper.outgoing .message-bubble.call-log-card {
+    background: #6366f1; /* Primary color for outgoing */
+    align-self: flex-end;
+}
+.message-wrapper.outgoing .message-bubble.call-log-card .log-duration {
+    color: #d1d5db; /* Lighten duration text for purple background */
+}
+/* --- PULSATING GREEN ANIMATION (ADD THIS TO messaging.css) --- */
+@keyframes pulseGreen {
+    0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); }
+    50% { transform: scale(1.05); box-shadow: 0 0 0 12px rgba(16, 185, 129, 0); }
+    100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); }
+}
+
+/* Custom Warning Modal Styles */
+#btnStayInCall:hover {
+    background: #334155 !important;
+}
+#btnLeaveCall:hover {
+    background: #dc2626 !important;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(239, 68, 68, 0.4) !important;
+}
+/* messaging.php (Add inside <style> block) */
+
+/* Siguraduhing nasa loob lang ng header ang X button */
+.sub-modal-header {
+    position: relative; /* Safety anchor */
+}
+
+.modal-close-btn-icon, .close-sub-modal {
+    background: transparent;
+    border: none;
+    color: var(--text-gray);
+    font-size: 1.5rem;
+    cursor: pointer;
+    padding: 0 10px;
+    line-height: 1;
+    transition: color 0.2s;
+    /* Reset positioning just in case */
+    position: static; 
+    transform: none;
+}
+
+.modal-close-btn-icon:hover {
+    color: #ef4444; /* Red on hover */
+}
+
+/* Gawing clickable ang buong overlay background */
+.modal-overlay {
+    cursor: pointer; 
+}
+/* Pero ibalik sa default ang cursor sa loob ng content para hindi nakakalito */
+.sub-modal-content, .modal-content {
+    cursor: default;
+}
+/* Modal Close Button Fix */
+#membersModal .modal-content {
+    position: relative; /* Important for absolute child */
+    padding-top: 0;
+}
+
+#closeMembersModal {
+    font-size: 2rem;
+    line-height: 1;
+    background: none;
+    border: none;
+    color: #94a3b8;
+    cursor: pointer;
+    transition: color 0.2s;
+    padding: 0 10px;
+    margin-left: auto; /* Push to right flex */
+}
+
+#closeMembersModal:hover {
+    color: #ef4444;
+}
+
+.sub-modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 20px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+/* =========================================
+   MEMBERS MODAL REDESIGN (Professional Look)
+   ========================================= */
+
+/* 1. Ayusin ang Overlay para gumana ang click sa labas */
+#membersModal.modal-overlay {
+    z-index: 2000; /* Siguraduhing nasa ibabaw */
+    background: rgba(0, 0, 0, 0.85); /* Mas madilim na background */
+    backdrop-filter: blur(5px); /* Modern blur effect */
+    display: none; /* Hidden by default */
+    align-items: center;
+    justify-content: center;
+}
+
+/* 2. Container ng Modal */
+#membersModal .modal-content {
+    background: var(--dark-card);
+    width: 400px;
+    max-width: 90%;
+    border-radius: 16px;
+    border: 1px solid var(--border-color);
+    box-shadow: 0 20px 50px rgba(0,0,0,0.6);
+    padding: 0; /* Reset padding para custom ang header/body */
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    animation: slideUpFade 0.3s ease;
+}
+
+/* 3. Header Styling (Sticky Title & Close Button) */
+#membersModal .modal-content > div:first-child {
+    padding: 15px 20px;
+    border-bottom: 1px solid var(--border-color);
+    background: var(--dark-card);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+#membersModal h3 {
+    margin: 0;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--text-light);
+    letter-spacing: 0.5px;
+}
+
+/* 4. Close Button Design */
+#closeMembersModal {
+    background: transparent;
+    border: none;
+    color: var(--text-gray);
+    font-size: 1.8rem;
+    line-height: 1;
+    cursor: pointer;
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+}
+
+#closeMembersModal:hover {
+    background: rgba(239, 68, 68, 0.1);
+    color: #ef4444; /* Red on hover */
+    transform: rotate(90deg); /* Cool rotation effect */
+}
+
+/* 5. Members List Scrolling Area */
+#membersListContainer {
+    max-height: 60vh; /* Limit height para hindi sumobra sa screen */
+    overflow-y: auto;
+    padding: 10px;
+}
+
+/* Animation */
+@keyframes slideUpFade {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* =========================================
+   CUSTOM CONFIRM MODAL (Professional Style)
+   ========================================= */
+
+#customConfirmModal {
+    z-index: 10000 !important; /* Pinaka-ibabaw */
+    background: rgba(0, 0, 0, 0.85);
+    backdrop-filter: blur(5px);
+    display: none;
+    align-items: center;
+    justify-content: center;
+}
+
+#customConfirmModal .modal-content {
+    background: var(--dark-card);
+    width: 380px;
+    max-width: 90%;
+    border-radius: 16px;
+    border: 1px solid var(--border-color);
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7);
+    padding: 30px 25px;
+    text-align: center;
+    animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+/* Icon Animation */
+#customConfirmModal .confirm-icon {
+    font-size: 3.5rem;
+    margin-bottom: 15px;
+    display: inline-block;
+    animation: shake 0.5s ease-in-out;
+}
+
+#customConfirmModal h3 {
+    color: var(--text-light);
+    font-size: 1.4rem;
+    font-weight: 700;
+    margin: 0 0 10px 0;
+}
+
+#customConfirmModal p {
+    color: var(--text-gray);
+    font-size: 0.95rem;
+    margin-bottom: 25px;
+    line-height: 1.5;
+}
+
+/* Button Layout */
+#customConfirmModal .modal-options {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    margin: 0;
+}
+
+/* Common Button Style */
+#customConfirmModal .modal-option {
+    flex: 1;
+    padding: 12px 0;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 0.95rem;
+    cursor: pointer;
+    border: none;
+    transition: transform 0.1s, opacity 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#customConfirmModal .modal-option:hover {
+    transform: translateY(-2px);
+    opacity: 0.9;
+}
+
+/* Cancel Button */
+#btnCancelConfirm {
+    background: var(--bg-input);
+    color: var(--text-light);
+    border: 1px solid var(--border-color);
+}
+
+/* Confirm Button (Red/Danger) */
+#btnYesConfirm {
+    background: #ef4444 !important;
+    color: white !important;
+    box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+}
+
+@keyframes popIn {
+    from { opacity: 0; transform: scale(0.9); }
+    to { opacity: 1; transform: scale(1); }
+}
+
+@keyframes shake {
+    0%, 100% { transform: rotate(0deg); }
+    25% { transform: rotate(-10deg); }
+    75% { transform: rotate(10deg); }
+}
+
+/* =========================================
+   IMPROVED MESSAGE ACTIONS (Glassmorphism)
+   ========================================= */
+
+/* 1. The Floating Pill (Container ng Emoji, Reply, Dots) */
+.message-actions {
+    opacity: 0;
+    pointer-events: none;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%) scale(0.9);
+    z-index: 50;
+    
+    /* Modern Glass Style */
+    background: rgba(30, 41, 59, 0.85); /* Dark semi-transparent */
+    backdrop-filter: blur(8px); /* Blur effect */
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 24px;
+    padding: 4px 8px;
+    display: flex;
+    gap: 8px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+/* Visibility Logic */
+.message-wrapper.actions-visible .message-actions,
+.message-wrapper:hover .message-actions { 
+    opacity: 1; 
+    pointer-events: auto; 
+    transform: translateY(-50%) scale(1); 
+}
+
+/* Positioning */
+.message-wrapper.outgoing .message-actions { right: 100%; margin-right: 12px; }
+.message-wrapper.incoming .message-actions { left: 100%; margin-left: 12px; }
+
+/* 2. Action Buttons (Emoji, Reply, Dots) */
+.btn-react-emoji, .btn-reply, .btn-bubble-menu {
+    background: transparent;
+    border: none;
+    font-size: 1.1rem;
+    cursor: pointer;
+    padding: 6px;
+    border-radius: 50%;
+    transition: background 0.2s, transform 0.2s;
+    color: #cbd5e1; /* Light gray text */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+}
+
+.btn-react-emoji:hover, .btn-reply:hover, .btn-bubble-menu:hover {
+    background: rgba(255, 255, 255, 0.15);
+    color: #fff;
+    transform: scale(1.15);
+}
+
+/* =========================================
+   MESSAGE DROPDOWN MENU (Delete Options)
+   ========================================= */
+.message-dropdown-menu {
+    position: absolute;
+    background: var(--dark-card);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    padding: 6px;
+    display: none; /* Hidden by default */
+    flex-direction: column;
+    gap: 2px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    z-index: 100;
+    min-width: 180px;
+    animation: fadeIn 0.2s ease;
+}
+
+.message-dropdown-menu.active {
+    display: flex;
+}
+
+.msg-menu-item {
+    background: transparent;
+    border: none;
+    color: var(--text-light);
+    padding: 10px 15px;
+    text-align: left;
+    font-size: 0.9rem;
+    cursor: pointer;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    transition: background 0.2s;
+}
+
+.msg-menu-item:hover {
+    background: var(--bg-hover);
+}
+
+.msg-menu-item.danger {
+    color: #ef4444;
+}
+.msg-menu-item.danger:hover {
+    background: rgba(239, 68, 68, 0.1);
+}
+
+/* =========================================
+   REACTION PICKER (Floating Fixed)
+   ========================================= */
+.reaction-picker-dropdown {
+    position: fixed; /* Lilitaw sa ibabaw ng lahat */
+    background: rgba(30, 41, 59, 0.95); /* Dark background */
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 50px; /* Pill shape */
+    padding: 8px 12px;
+    display: flex;
+    gap: 8px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    z-index: 99999;
+    animation: bounceIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.reaction-opt {
+    background: transparent;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    transition: transform 0.2s;
+    padding: 0 4px;
+    line-height: 1;
+}
+
+.reaction-opt:hover {
+    transform: scale(1.4) translateY(-5px);
+}
+
+@keyframes bounceIn {
+    from { opacity: 0; transform: scale(0.5) translateY(10px); }
+    to { opacity: 1; transform: scale(1) translateY(0); }
+}
+/* Highlight for MY reaction */
+.message-reaction-item.my-reaction {
+    background-color: rgba(99, 102, 241, 0.3) !important; /* Primary color tint */
+    border: 1px solid #6366f1 !important; /* Solid border */
+    color: white !important;
+    font-weight: bold;
+    box-shadow: 0 0 5px rgba(99, 102, 241, 0.5); /* Glowing effect */
+}
+
+/* =========================================
+   UPLOAD MODAL REDESIGN
+   ========================================= */
+
+/* Modal Container (Overlay) */
+#uploadModal {
+    z-index: 2000;
+    background: rgba(0, 0, 0, 0.85);
+    backdrop-filter: blur(5px);
+    display: none; /* Hidden default */
+    align-items: center;
+    justify-content: center;
+}
+
+/* Modal Box */
+#uploadModal .modal-content {
+    background: var(--dark-card);
+    width: 380px;
+    max-width: 90%;
+    border-radius: 16px;
+    border: 1px solid var(--border-color);
+    box-shadow: 0 20px 50px rgba(0,0,0,0.6);
+    padding: 0;
+    overflow: hidden;
+    animation: zoomIn 0.3s ease;
+}
+
+/* Header */
+.upload-header {
+    padding: 15px 20px;
+    border-bottom: 1px solid var(--border-color);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: var(--bg-input);
+}
+
+.upload-header h3 {
+    margin: 0;
+    color: var(--text-light);
+    font-size: 1.1rem;
+}
+
+/* Close 'X' Button */
+.close-upload-btn {
+    background: transparent;
+    border: none;
+    color: var(--text-gray);
+    font-size: 1.5rem;
+    cursor: pointer;
+    line-height: 1;
+    transition: color 0.2s;
+}
+.close-upload-btn:hover { color: #ef4444; }
+
+/* Grid for Options */
+.upload-options {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+    padding: 25px;
+}
+
+/* Individual Option Card */
+.upload-option-card {
+    background: var(--bg-input);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    padding: 20px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+
+.upload-option-card:hover {
+    background: var(--bg-hover);
+    border-color: var(--primary-color);
+    transform: translateY(-3px);
+}
+
+.upload-icon {
+    font-size: 2.5rem;
+    margin-bottom: 5px;
+}
+
+.upload-label {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--text-light);
+}
+
+.upload-desc {
+    font-size: 0.75rem;
+    color: var(--text-gray);
+}
+
+@keyframes zoomIn {
+    from { transform: scale(0.9); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+}
+/* =========================================
+   DETAILS PANEL UPGRADE
+   ========================================= */
+
+/* Editable Name Container */
+.editable-name-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin-bottom: 5px;
+}
+
+.editable-name-container h3 {
+    margin: 0;
+    font-size: 1.2rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 180px;
+}
+
+/* Pencil Icon */
+.btn-edit-name {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    font-size: 1rem;
+    opacity: 0.5;
+    transition: opacity 0.2s;
+    padding: 4px;
+    border-radius: 50%;
+}
+.btn-edit-name:hover {
+    opacity: 1;
+    background: var(--bg-hover);
+}
+
+/* Action Buttons Grid */
+.details-actions {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin-bottom: 25px;
+    padding-bottom: 25px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.action-button {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    text-decoration: none;
+    color: var(--text-gray);
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.action-button:hover {
+    transform: translateY(-2px);
+    color: var(--text-light);
+}
+
+.action-button .icon {
+    width: 45px;
+    height: 45px;
+    background: var(--bg-input);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    transition: background 0.2s;
+}
+
+.action-button:hover .icon {
+    background: var(--primary-color);
+    color: white;
+}
+
+/* Accordion Styling */
+.accordion-header {
+    width: 100%;
+    background: var(--bg-input);
+    border: none;
+    color: var(--text-light);
+    padding: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-radius: 8px;
+    cursor: pointer;
+    margin-bottom: 10px;
+    font-weight: 600;
+}
+
+.accordion-icon {
+    transition: transform 0.3s ease;
+}
+.accordion-header.active .accordion-icon {
+    transform: rotate(180deg);
+}
+
+
+
+/* Media Content Grids */
+#tab-media-content {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 5px;
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+.empty-media {
+    text-align: center;
+    color: var(--text-gray);
+    padding: 20px;
+    grid-column: 1 / -1;
+    font-size: 0.9rem;
+}
+
+
+
+/* Photo Grid (Instagram/Messenger Style) */
+#tab-media-content {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); /* 3 Columns exact */
+    gap: 2px; /* Sobrang nipis na gap */
+    padding: 0;
+    max-height: 350px;
+    overflow-y: auto;
+}
+
+
+
+/* Files List */
+#tab-files-content {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    max-height: 350px;
+    overflow-y: auto;
+    padding-right: 5px;
+}
+
+/* =========================================
+   MESSENGER STYLE: RENAME MODAL INPUTS
+   ========================================= */
+.modern-input {
+    width: 100%;
+    padding: 12px;
+    background: var(--bg-input);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    color: white;
+    font-size: 1rem;
+    outline: none;
+    transition: border-color 0.2s;
+}
+
+.modern-input:focus {
+    border-color: var(--primary-color);
+}
+
+.btn-cancel {
+    background: transparent;
+    color: var(--text-light);
+    border: none;
+    padding: 8px 16px;
+    cursor: pointer;
+    font-weight: 600;
+}
+
+.btn-save {
+    background: var(--primary-color);
+    color: white;
+    border: none;
+    padding: 8px 20px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 600;
+}
+
+/* =========================================
+   RENAME MODAL STYLING (Fixed)
+   ========================================= */
+#renameModal {
+    z-index: 3000;
+    background: rgba(0, 0, 0, 0.85);
+    backdrop-filter: blur(4px);
+    display: none;
+    align-items: center;
+    justify-content: center;
+}
+
+#renameModal .modal-content {
+    background: var(--dark-card);
+    width: 400px;
+    border-radius: 12px;
+    border: 1px solid var(--border-color);
+    box-shadow: 0 20px 60px rgba(0,0,0,0.6);
+    overflow: hidden;
+    padding: 0;
+    text-align: left;
+}
+
+#renameModal .upload-header {
+    padding: 15px 20px;
+    border-bottom: 1px solid var(--border-color);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.03);
+}
+
+#renameModal .upload-header h3 {
+    margin: 0;
+    color: var(--text-light);
+    font-size: 1.1rem;
+    font-weight: 600;
+}
+
+#renameModal .modern-input {
+    width: 100%;
+    padding: 12px 15px;
+    margin-top: 10px;
+    background: var(--bg-input);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    color: white;
+    font-size: 1rem;
+    outline: none;
+    box-sizing: border-box; /* Ensures padding doesn't break width */
+}
+
+#renameModal .modern-input:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.2);
+}
+
+#renameModal .btn-save {
+    background: var(--primary-color);
+    color: white;
+    padding: 10px 20px;
+    border-radius: 8px;
+    border: none;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+#renameModal .btn-save:hover {
+    background: var(--secondary-color);
+}
+
+#renameModal .btn-cancel {
+    background: transparent;
+    color: var(--text-gray);
+    padding: 10px 20px;
+    border: none;
+    cursor: pointer;
+    font-weight: 500;
+}
+
+#renameModal .btn-cancel:hover {
+    color: var(--text-light);
+}
+
+/* =========================================
+   CUSTOM SCROLLBARS (Slim & Modern)
+   ========================================= */
+
+/* Global Scrollbar Width */
+::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+
+/* Track (Background) */
+::-webkit-scrollbar-track {
+    background: transparent; 
+}
+
+/* Handle (Thumb) */
+::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.2); 
+    border-radius: 10px;
+}
+
+/* Handle on Hover */
+::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.4); 
+}
+
+/* Specific tweaks for Message Area & Media Panel */
+#messageArea::-webkit-scrollbar-track,
+#tab-media-content::-webkit-scrollbar-track,
+#tab-files-content::-webkit-scrollbar-track {
+    margin: 5px 0;
+}
+
+/* =========================================
+   MEDIA & FILES LAYOUT FIX
+   ========================================= */
+
+
+/* Photo Grid (Cleaner) */
+#tab-media-content {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 3px;
+    padding: 2px;
+    max-height: 350px;
+    overflow-y: auto;
+}
+
+/* File List (Cleaner) */
+#tab-files-content {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 5px;
+    max-height: 350px;
+    overflow-y: auto;
+}
+
+/* =========================================
+   RENAME MODAL BUTTONS
+   ========================================= */
+.rename-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.btn-reset {
+    margin-right: auto; /* Push to left */
+    background: transparent;
+    color: #ef4444; /* Red color */
+    border: 1px solid #ef4444;
+    padding: 8px 15px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.85rem;
+    font-weight: 600;
+    transition: all 0.2s;
+}
+
+.btn-reset:hover {
+    background: rgba(239, 68, 68, 0.1);
+}
+/* =========================================
+   MEDIA & FILES REDESIGN (Fixed)
+   ========================================= */
+
+
+
+/* --- FILES TAB (List Style) --- */
+.file-list-item {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    margin-bottom: 5px;
+    background: transparent; /* Clean look */
+    border-radius: 8px;
+    text-decoration: none;
+    transition: background 0.2s;
+}
+
+.file-list-item:hover {
+    background: var(--bg-hover);
+}
+
+.file-icon-box {
+    width: 40px;
+    height: 40px;
+    background: var(--bg-input);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    margin-right: 12px;
+    flex-shrink: 0;
+}
+
+.file-info {
+    overflow: hidden;
+}
+
+.file-name {
+    color: var(--text-light);
+    font-size: 0.9rem;
+    font-weight: 500;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.file-meta {
+    color: var(--text-gray);
+    font-size: 0.75rem;
+    margin-top: 2px;
+}/* =========================================
+   MEDIA GRID FINAL FIX
+   ========================================= */
+
+/* 1. Main Tab Container - Normal Flow lang */
+#tab-media-content {
+    display: block !important; /* Ibalik sa normal block */
+    width: 100%;
+    padding: 0 5px;
+    box-sizing: border-box;
+}
+
+/* 2. Month Header (e.g., NOVEMBER 2025) */
+.media-month-header {
+    width: 100%;
+    margin: 15px 0 8px 0;
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--text-gray);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    display: block; /* Siguraduhing nasa sariling linya */
+}
+
+/* 3. The Actual Photo Grid (Ito ang dapat maging 3-cols) */
+.media-grid-container {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); /* 3 Pantay na Columns */
+    gap: 3px; /* Gap sa pagitan ng pictures */
+    width: 100%;
+    margin-bottom: 15px;
+}
+
+/* 4. Grid Item */
+.media-item {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 1 / 1; /* Square */
+    overflow: hidden;
+    background: #000;
+    cursor: pointer;
+    border-radius: 4px; /* Optional: konting curve */
+}
+
+/* 5. Image Zoom */
+.media-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.2s ease;
+}
+
+.media-item:hover img {
+    transform: scale(1.1);
+    opacity: 0.9;
+}
+/* =========================================
+   MEDIA & FILES: FINAL COMBINED FIX
+   ========================================= */
+
+/* --- 1. BUTTONS (Pill Style) --- */
+.media-tabs {
+    display: flex;
+    background: var(--bg-input);
+    padding: 4px;
+    border-radius: 8px;
+    margin: 10px 0 15px 0;
+    gap: 5px;
+    border: none;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.media-tab {
+    flex: 1;
+    background: transparent;
+    border: none;
+    color: var(--text-gray);
+    padding: 8px 0;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    border-radius: 6px;
+    transition: all 0.2s ease;
+    text-align: center;
+}
+
+.media-tab.active {
+    background: var(--dark-card);
+    color: var(--text-light);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+/* --- 2. PHOTO GRID LAYOUT --- */
+
+/* Main Container - Dapat BLOCK para nasa taas ang header */
+#tab-media-content {
+    display: block !important; 
+    width: 100%;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Month Header (e.g. NOVEMBER 2025) */
+.media-month-header {
+    display: block; /* Sariling linya */
+    width: 100%;
+    margin: 15px 0 8px 5px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: var(--text-gray);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* The 3-Column Grid Wrapper */
+.media-grid-container {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); /* 3 Pantay na Columns */
+    gap: 2px; /* Manipis na gap */
+    width: 100%;
+    margin-bottom: 15px;
+}
+
+/* Individual Photo Box */
+.media-item {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 1 / 1; /* Perfect Square */
+    overflow: hidden;
+    background: #000;
+    cursor: pointer;
+}
+
+/* Image Zoom */
+.media-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.2s ease;
+}
+
+.media-item:hover img {
+    transform: scale(1.1);
+    opacity: 0.9;
+}
+
+/* --- 3. FILE LIST LAYOUT --- */
+#tab-files-content {
+    display: none; /* Default hide, JS na bahala magpakita */
+    flex-direction: column;
+    gap: 5px;
+}
+/* =========================================
+   MEDIA GRID LAYOUT (Final Polish)
+   ========================================= */
+
+/* 1. Main Container (Dapat BLOCK para maayos ang headers) */
+#tab-media-content {
+    display: block; 
+    width: 100%;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* 2. Month Header (e.g. NOVEMBER 2025) */
+.media-month-header {
+    display: block; /* Sariling linya */
+    width: 100%;
+    margin: 15px 0 8px 5px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: var(--text-gray);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    clear: both; /* Iwas patong */
+}
+
+/* 3. The Grid Wrapper (Ito ang 3 columns) */
+.media-grid-container {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); /* 3 Pantay na Columns */
+    gap: 2px;
+    width: 100%;
+    margin-bottom: 15px;
+}
+
+/* 4. Images */
+.media-item {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    overflow: hidden;
+    background: #000;
+    cursor: pointer;
+}
+
+.media-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+/* =========================================
+   SCROLLBAR & LAYOUT CLEANUP
+   ========================================= */
+
+/* 1. Remove Bottom Scrollbar (Horizontal) */
+#tab-media-content, 
+#tab-files-content,
+.accordion-content {
+    overflow-x: hidden !important; /* Wala nang scroll sa ilalim */
+    width: 100%;
+    box-sizing: border-box;
+}
+
+/* 2. Ayusin ang Vertical Scrollbar */
+/* Siguraduhin na hindi lalagpas sa screen ang content */
+#tab-media-content, 
+#tab-files-content {
+    max-height: 400px; /* Limitahan ang height */
+    overflow-y: auto;  /* Vertical scroll lang ang pwede */
+    padding-right: 5px; /* Iwas dikit sa scrollbar */
+}
+
+/* 3. Clean File List Container */
+#tab-files-content {
+    flex-direction: column;
+    gap: 8px;
+    padding-bottom: 10px;
+}

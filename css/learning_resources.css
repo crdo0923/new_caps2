@@ -1,0 +1,234 @@
+/* =======================================================
+   LEARNING RESOURCES STYLES (Modeled after settings.css)
+========================================================== */
+
+/* --- IMPORTED VARIABLES --- */
+:root {
+    --primary-color: #6366f1;
+    --secondary-color: #8b5cf6;
+    --accent-color: #ec4899;
+    --dark-bg: #0f172a;
+    --dark-card: #1e293b;
+    --text-light: #f8fafc;
+    --text-gray: #cbd5e1;
+    --success: #10b981;
+    --warning: #f59e0b;
+    --danger: #ef4444;
+    --border-color: rgba(99, 102, 241, 0.2); 
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: var(--dark-bg);
+    color: var(--text-light);
+    line-height: 1.6;
+    overflow-x: hidden;
+}
+
+/* --- OVERALL PAGE STRUCTURE --- */
+
+.resources-body {
+    min-height: 100vh;
+    background: var(--dark-bg);
+    padding-top: 0; 
+}
+
+/* 1. Main Container Setup (Profile-Container look) */
+.resources-container {
+    padding-top: 5rem; 
+    padding-bottom: 3rem;
+    max-width: 1400px; /* Use wide max width like settings */
+    margin: 0 auto;
+    padding-left: 1rem;
+    padding-right: 1rem;
+}
+
+/* 2. Top Action Bar (Profile-Actions look) */
+.resources-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 0;
+    margin-bottom: 2rem;
+}
+
+.resources-actions .btn-back {
+    /* Style adopted from settings.css .profile-actions .btn-back */
+    text-decoration: none;
+    padding: 0.75rem 1.25rem;
+    border-radius: 8px;
+    font-weight: 500;
+    transition: all 0.3s;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--text-gray);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.resources-actions .btn-back:hover {
+    color: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+.resources-actions .action-buttons {
+    display: flex;
+    gap: 1rem;
+}
+
+.resources-actions .btn-logout {
+    background: #444; 
+    color: white;
+    text-decoration: none;
+    padding: 0.75rem 1.25rem;
+    border-radius: 8px;
+    font-weight: 500;
+    transition: all 0.3s;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.resources-actions .btn-logout:hover {
+    background: var(--danger);
+}
+
+
+/* 3. Section Header (Profile-Content .section-header look) */
+.resources-content .section-header {
+    max-width: 900px;
+    margin: 0 auto 3.5rem; 
+    text-align: center;
+}
+
+.section-header h1 {
+    font-size: 2.8rem; 
+    /* Apply gradient text effect */
+    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color), var(--accent-color));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 0.75rem;
+    font-weight: 700;
+}
+
+.section-header p {
+    font-size: 1.1rem;
+    color: var(--text-gray);
+}
+
+
+/* 4. The Grid Layout for Resources (Settings-Container look) */
+.resources-grid {
+    display: grid;
+    /* 3 columns on desktop, similar to settings sections */
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2rem;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+/* 5. Resource Cards (Settings-Card look) */
+.resource-card {
+    background: var(--dark-card);
+    padding: 2rem; 
+    border-radius: 16px; 
+    border: 1px solid rgba(99, 102, 241, 0.2); 
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s;
+    display: flex; /* Flex container for content */
+    flex-direction: column;
+}
+
+.resource-card:hover {
+    transform: translateY(-5px); 
+    border-color: var(--primary-color);
+}
+
+.resource-card .icon {
+    font-size: 2.5rem;
+    display: block;
+    margin-bottom: 1rem;
+    color: var(--primary-color); /* Add color to icons */
+}
+
+.resource-card h3 {
+    font-size: 1.4rem; 
+    font-weight: 600;
+    margin-bottom: 1rem;
+    color: var(--text-light);
+}
+
+.resource-card p {
+    color: var(--text-gray);
+    margin-bottom: 1.5rem;
+    font-size: 0.95rem;
+    flex-grow: 1; /* Pushes the button to the bottom */
+}
+
+.resource-card .btn-resource-link {
+    display: inline-block;
+    width: 100%;
+    text-align: center;
+    padding: 0.8rem 1.2rem;
+    /* Use primary gradient for link button for emphasis */
+    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+    color: var(--text-light);
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.resource-card .btn-resource-link:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(99, 102, 241, 0.5);
+}
+
+/* Special full-width card style */
+.resource-card.full-width {
+    grid-column: 1 / -1; /* Span across all columns */
+}
+
+
+/* =======================================================
+    RESPONSIVE ADJUSTMENTS (Similar to settings.css)
+========================================================== */
+@media (max-width: 1200px) {
+    .resources-grid {
+        /* 2 columns on medium screens */
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 768px) {
+    .resources-grid {
+        /* Single column on mobile */
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+
+    .section-header h1 {
+        font-size: 2.2rem;
+    }
+
+    .resources-actions {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 1rem;
+    }
+    .resources-actions .action-buttons {
+        justify-content: space-around;
+    }
+    .resources-actions .btn-back {
+        text-align: center;
+        width: 100%;
+    }
+
+    .resource-card {
+        padding: 1.5rem;
+    }
+}
+
+/* IMPORTANT: Old styles in the original learning_resources.css that are not 
+   part of this new, settings-based structure should be removed or commented out.
+   The provided content here is the new, complete learning_resources.css. */

@@ -1,0 +1,13 @@
+includes/sidebar.php
+messaging.php
+learning_resources.php
+profile.php
+settings.php
+admin_dashboard.php
+includes/ai_faq.php
+faq.php
+js/main.js
+js/spa_navigation.js
+js/smart_study_ai.js
+js/messaging.js
+admin_dashboard.php (updated)

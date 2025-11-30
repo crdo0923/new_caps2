@@ -1,0 +1,180 @@
+/* Shared layout styles for sidebar + main content across pages */
+
+/* Structural sidebar */
+.sidebar {
+  width: 280px;
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  background-color: #0f172a !important; /* deeper dark - enforced to keep same shade across pages */
+  border-right: 1px solid rgba(255,255,255,0.02);
+  padding: 1.4rem 1rem;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+  z-index: 1000;
+  transition: width 0.28s cubic-bezier(.2,.9,.2,1), transform 0.28s ease;
+  overflow: visible !important;
+  box-shadow: inset -6px 0 14px rgba(2,6,23,0.28);
+  font-family: Inter, sans-serif;
+}
+
+/* Logo area */
+.logo-container { display:flex; align-items:center; gap:0.75rem; overflow: visible; height: 48px; padding-right: 72px; border-bottom: none !important; position: relative; padding-top: 10px; }
+.logo { font-size: 1.9rem; color: var(--primary-color); display:flex; align-items:center; justify-content:center; line-height: 1; }
+.logo-text { color: #fff; font-weight:800; font-size: 1.2rem; margin-left: 8px; margin-right: 8px; letter-spacing: -0.2px; transition: transform 0.2s ease, opacity 0.18s; max-width: calc(100% - 56px); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; flex: 1 1 auto; }
+
+.top-bar { position: relative; }
+/* Toggle (Burger) Button - positioned within the logo-container */
+.logo-container { position: relative; }
+.logo-container .btn-toggle { position: relative; right: auto; left: auto; top: auto; transform: none; display:flex !important; align-items:center; justify-content:center; width: 36px; height: 36px; padding: 0; margin-left: 18px; border-radius: 8px; background: rgba(255,255,255,0.02) !important; border: 1px solid rgba(255,255,255,0.03); color: #fff !important; cursor: pointer; z-index: 2500; pointer-events: auto; box-shadow: none; transition: none !important; opacity: 1 !important; }
+.btn-toggle i { transition: none !important; }
+.btn-toggle i { font-size: 18px; color: #ffffff !important; }
+/* No hover movement or color change for the hamburger — keep it visually stable */
+.btn-toggle:hover, .btn-toggle:active, .btn-toggle:focus { background: transparent !important; color: #94a3b8 !important; transform: none !important; outline: none; box-shadow: none; }
+.btn-toggle:focus { outline: none; box-shadow: 0 0 0 4px rgba(99,102,241,0.12); }
+.btn-toggle:active { transform: none; }
+
+/* Ensure toggle visible on collapsed */
+.sidebar.collapsed .logo-container .btn-toggle { position: absolute; left: 24px; right: auto; top: 50%; transform: translateY(-50%); border: 1px solid rgba(255,255,255,0.03); z-index: 2500; background: linear-gradient(180deg, rgba(13,16,25,0.75), rgba(15,20,30,0.55)) !important; box-shadow: 0 6px 14px rgba(2,6,23,0.6); }
+
+/* Create a consistent divider below the logo, but hide a small area under the toggle so it doesn't look cut */
+.logo-container::after { content: ''; position: absolute; bottom: 0; left: 10px; right: 10px; height: 1px; background: rgba(255,255,255,0.03); z-index: 1; }
+.logo-container::before { content:''; position:absolute; bottom: -1px; height: 2px; width: 48px; background: #0f172a; z-index: 2; right: var(--logo-divider-right, 48px); left: var(--logo-divider-left, auto); border-radius: 6px; }
+.sidebar.collapsed .logo-container::before { right: var(--logo-divider-right-collapsed, auto); left: var(--logo-divider-left-collapsed, 10px); }
+
+/* Make sure logo spacing looks good when collapsed */
+.sidebar.collapsed .logo { font-size: 1.6rem; }
+.logo-container .logo-text { font-size: 1.2rem; margin-left: 6px; }
+
+/* Ensure nav icons and labels align consistently */
+.nav-item { align-items:center; display:flex; gap: 12px; padding: 0.85rem 0.9rem; border-radius: 8px; margin: 6px 4px; }
+.nav-icon { width: 40px; height: 40px; display:flex; align-items:center; justify-content:center; font-size: 1.4rem; }
+.nav-item span { display: inline-block; }
+.sidebar.collapsed .nav-item span { display: none; }
+/* Add active state style (big pill) */
+.nav-item.active { background: linear-gradient(90deg, rgba(99,102,241,0.14), rgba(99,102,241,0.06)); color: #fff; border-left: 6px solid #6366f1; transform: translateX(3px); box-shadow: 0 8px 30px rgba(99,102,241,0.12); }
+.nav-item.active .nav-icon { background: linear-gradient(135deg, rgba(99,102,241,0.22), rgba(99,102,241,0.08)); border-radius: 8px; padding: 6px; color: #fff; }
+
+/* Footer and badge spacing */
+.sidebar-footer { padding-bottom: 18px; }
+
+/* make sure content doesn't overlap when collapsed in mobile */
+@media (max-width: 768px) {
+  .sidebar { transform: translateX(-100%); }
+  .sidebar.open { transform: translateX(0); }
+  .top-bar .btn-toggle { display:block; }
+}
+.sidebar.collapsed .logo-container { justify-content: flex-start; padding-left: 8px; }
+
+/* Collapsed sidebar */
+.sidebar.collapsed { width: 80px; padding: 1.5rem 0.5rem; }
+.sidebar.collapsed .logo-text,
+.sidebar.collapsed .nav-item span:not(.nav-icon):not(.nav-badge) { display: none !important; }
+.sidebar.collapsed .top-bar { /* preserve row layout to avoid the toggle relocating below logo */ flex-direction: row; gap: 1rem; align-items: center; }
+.sidebar.collapsed .nav-item { justify-content: center; }
+
+/* Also allow the body to set a global collapsed state to reduce flicker at initial paint */
+.sidebar-collapsed .sidebar { width: 80px; padding: 1.5rem 0.5rem; }
+.sidebar-collapsed .sidebar .logo-text { display: none !important; }
+.sidebar-collapsed .main-content { margin-left: 80px; }
+
+/* Main content offset */
+.main-content { margin-left: 280px; padding: 2rem; transition: margin-left 0.28s cubic-bezier(.2,.9,.2,1); box-sizing: border-box; }
+.sidebar.collapsed ~ .main-content { margin-left: 80px; }
+
+/* Nav items */
+.sidebar-nav .nav-item,
+.sidebar-footer .nav-item {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.8rem 1rem;
+  border-radius: 10px;
+  color: #94a3b8;
+  text-decoration: none;
+  font-weight: 500;
+  transition: all 0.3s;
+  white-space: nowrap;
+  position: relative;
+  box-sizing: border-box;
+}
+
+/* Add top margin to avoid overlap with logo toggle when collapsed */
+.sidebar-nav { margin-top: 6px; }
+.sidebar.collapsed .sidebar-nav { margin-top: 56px; }
+.sidebar-nav .nav-item:hover,
+.sidebar-footer .nav-item:hover { color: #fff; background: rgba(255,255,255,0.05); }
+.sidebar-nav .nav-item.active,
+.sidebar-footer .nav-item.active { background: #6366f1; color: #fff; box-shadow: 0 4px 12px rgba(99,102,241,0.3); }
+.nav-icon { font-size: 1.4rem; display: flex; align-items: center; justify-content: center; min-width: 24px; }
+/* Slight icon hover scale for better feel */
+.sidebar-nav .nav-item .nav-icon:hover { transform: scale(1.06); }
+
+/* Top bar and logo */
+.top-bar { display:flex; justify-content: space-between; align-items: center; width: 100%; margin-bottom: 1rem; padding: 0 0.5rem; }
+.logo-container { display:flex; align-items:center; gap: 0.75rem; overflow: visible; padding-right: 72px; }
+/* secondary rule removed - consolidated above to keep font-size consistent */
+/* Screen-reader only helper */
+.sr-only { position: absolute !important; width: 1px !important; height: 1px !important; padding: 0 !important; margin: -1px !important; overflow: hidden !important; clip: rect(0,0,0,0) !important; white-space: nowrap !important; border: 0 !important; }
+/* Remove duplicate .logo-container .btn-toggle override to keep consistent toggle styling */
+
+/* Profile card inside sidebar */
+.profile-card { display:flex; align-items:center; gap: 1rem; padding: 0.75rem; border-radius: 12px; cursor: pointer; transition: background 0.3s; background-color: rgba(15,23,42,0.3); border: 1px solid rgba(255,255,255,0.05); text-decoration: none; }
+.profile-card:hover { background-color: rgba(255,255,255,0.05); }
+.user-avatar { width: 48px; height: 48px; border-radius: 50%; overflow: hidden; flex-shrink: 0; background: #6366f1; display:flex; align-items:center; justify-content:center; border: 2px solid #4f46e5; }
+.user-avatar img { width:100%; height:100%; object-fit:cover; display:block; }
+.user-info h4 { color:#ffffff; font-weight:600; font-size: 1rem; margin:0; white-space:nowrap; }
+.user-program { color:#94a3b8; font-size:0.8rem; margin:0; }
+
+/* Badge */
+.nav-badge {
+  background: #ef4444;
+  color: #fff;
+  font-size: 0.7rem;
+  padding: 2px 8px;
+  border-radius: 10px;
+  margin-left: auto;
+  font-weight: 700;
+  min-width: 20px;
+  text-align: center;
+  display: inline-block;
+}
+.sidebar.collapsed .nav-badge {
+  position: absolute;
+  top: 5px;
+  right: 8px;
+  margin-left: 0;
+  padding: 2px 5px;
+  font-size: 0.65rem;
+  min-width: 18px;
+  height: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 0 0 2px #1e293b;
+  z-index: 10;
+}
+
+/* Make sure logout link in sidebar remains red regardless of page-specific styles */
+.sidebar .nav-item.logout,
+.sidebar a.btn-logout,
+.sidebar .nav-item.logout .nav-icon { color: var(--error-color) !important; }
+.sidebar .nav-item.logout { margin-top: 1rem; border-top: 1px solid rgba(255,255,255,0.02); padding-top: 1rem; }
+.sidebar .nav-item.logout:hover { background-color: rgba(239, 68, 68, 0.08) !important; color: #fff !important; }
+
+/* Global logout button style (for content-level logout buttons) */
+.btn-logout, a.btn-logout { color: var(--error-color) !important; background: rgba(239, 68, 68, 0.08) !important; border: none !important; }
+.btn-logout:hover, a.btn-logout:hover { background: var(--error-color) !important; color: #fff !important; }
+
+/* Responsive */
+@media (max-width: 768px) {
+  .sidebar { transform: translateX(-100%); transition: transform 0.3s ease; }
+  .sidebar.open { transform: translateX(0); }
+  .main-content { margin-left: 0; }
+  /* On mobile, show a fixed toggle in the top-right so users can open the sidebar when it's off-screen */
+  .logo-container .btn-toggle { position: fixed; right: 14px; top: 14px; transform: none; z-index: 24000; }
+  .sidebar.open .logo-container .btn-toggle { position: absolute; right: 10px; top: 12px; transform: none; }
+}
