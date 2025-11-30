@@ -154,10 +154,6 @@ document.addEventListener('DOMContentLoaded', function() {
             const maskLeftRaw = Math.round(left - ((maskWidth - toggleRect.width) / 2));
             const maskLeft = Math.max(6, Math.min(Math.floor(logoContainerRect.width - maskWidth - 6), maskLeftRaw));
             logoContainer.style.setProperty('--logo-divider-left-collapsed', maskLeft + 'px');
-            // Also try repeated alignment to catch small animation timing differences
-            try { requestAnimationFrame(alignSidebarToggle); } catch (e) {}
-            setTimeout(alignSidebarToggle, 40);
-            setTimeout(alignSidebarToggle, 260);
         }
     }
 });
