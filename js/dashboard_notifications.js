@@ -1,4 +1,13 @@
+// Clear any existing interval before starting a new one (prevents duplicates during SPA navigation)
+if (window.dashboardNotificationsInterval) {
+    clearInterval(window.dashboardNotificationsInterval);
+    window.dashboardNotificationsInterval = null;
+}
+
 document.addEventListener('DOMContentLoaded', function() {
+    // Prevent duplicate initialization
+    if (window._dashboardNotificationsInitialized) return;
+    window._dashboardNotificationsInitialized = true;
     
     // 1. SETUP CONTAINER
     let container = document.getElementById('notification-container');
@@ -144,10 +153,22 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // 5. Start Loop (Every 30 Seconds for performance - reduced from 2s)
+    // Clear any existing interval first to prevent duplicates
+    if (window.dashboardNotificationsInterval) {
+        clearInterval(window.dashboardNotificationsInterval);
+    }
     window.dashboardNotificationsInterval = setInterval(checkNotifications, 30000);
-    // SPA teardown support
+    
+    // SPA teardown support - clears interval and allows re-initialization
     window.spaTeardown = function() {
-        try { if (window.dashboardNotificationsInterval) { clearInterval(window.dashboardNotificationsInterval); window.dashboardNotificationsInterval = null; } } catch(e) {}
+        try { 
+            if (window.dashboardNotificationsInterval) { 
+                clearInterval(window.dashboardNotificationsInterval); 
+                window.dashboardNotificationsInterval = null; 
+            }
+            // Allow re-initialization after teardown
+            window._dashboardNotificationsInitialized = false;
+        } catch(e) {}
     };
     checkNotifications(); 
 });

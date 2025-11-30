@@ -751,22 +751,8 @@ $medal_icon = ($current_user_points >= 2000) ? '🏆' : (($current_user_points >
 
             // LOGOUT MODAL is handled globally; no per-page handlers to avoid duplicates
 
-            // REALTIME BADGE UPDATER (Polling - reduced frequency for performance)
-            function updateBadge() {
-                fetch('dashboard.php?ajax_action=get_unread_count')
-                .then(response => response.json())
-                .then(data => {
-                    const badge = document.getElementById('sidebarMsgBadge');
-                    if (data.count > 0) {
-                        badge.style.display = 'inline-block';
-                        badge.innerText = data.count;
-                    } else {
-                        badge.style.display = 'none';
-                    }
-                })
-                .catch(err => console.log('Polling error:', err));
-            }
-            window.dashboardBadgeInterval = setInterval(updateBadge, 30000);
+            // NOTE: Badge updater removed - now handled by js/dashboard_notifications.js
+            // to avoid duplicate intervals and memory leaks
 
             // ONBOARDING / TUTORIAL UI HANDLER
             try {
