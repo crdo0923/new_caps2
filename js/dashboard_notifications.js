@@ -143,8 +143,8 @@ document.addEventListener('DOMContentLoaded', function() {
         }, 500);
     }
 
-    // 5. Start Loop (Every 2 Seconds for Realtime feel)
-    window.dashboardNotificationsInterval = setInterval(checkNotifications, 2000);
+    // 5. Start Loop (Every 30 Seconds for performance - reduced from 2s)
+    window.dashboardNotificationsInterval = setInterval(checkNotifications, 30000);
     // SPA teardown support
     window.spaTeardown = function() {
         try { if (window.dashboardNotificationsInterval) { clearInterval(window.dashboardNotificationsInterval); window.dashboardNotificationsInterval = null; } } catch(e) {}

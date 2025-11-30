@@ -505,3 +505,50 @@ body::-webkit-scrollbar-thumb:hover, .sidebar::-webkit-scrollbar-thumb:hover, .m
 
 .subject-badge { background: rgba(255,255,255,0.03); color: #cbe0ff; padding: 4px 8px; border-radius: 8px; font-size:0.8rem; margin-left:6px; }
 
+/* ========================================
+   INLINE STYLES MOVED FROM dashboard.php
+   ======================================== */
+
+/* Focus warning banner */
+.focus-warning { position: fixed; left: 50%; transform: translateX(-50%) translateY(-20px); top: 20px; z-index: 15000; width: calc(100% - 40px); max-width: 900px; box-shadow: 0 10px 30px rgba(2,6,23,0.6); border-radius: 12px; opacity: 0; pointer-events: none; transition: transform 280ms cubic-bezier(.2,.9,.2,1), opacity 220ms ease; }
+.focus-warning.show { transform: translateX(-50%) translateY(0); opacity: 1; pointer-events: auto; }
+.focus-warning-inner { display:flex; align-items:center; gap:12px; padding:14px 18px; border-radius: 12px; background: linear-gradient(90deg, rgba(99,102,241,0.14), rgba(236,72,153,0.10)); border: 1px solid rgba(255,255,255,0.06); backdrop-filter: blur(6px); }
+.focus-warning-icon { width:44px; height:44px; border-radius:10px; display:flex; align-items:center; justify-content:center; background: linear-gradient(135deg,#ec4899,#6366f1); color:white; box-shadow: 0 6px 18px rgba(99,102,241,0.15); }
+.focus-warning-text h4 { margin:0; font-size:1rem; font-weight:700; color:#fff; }
+.focus-warning-text p { margin:0; font-size:0.85rem; color: #e6eef9; opacity:0.9; }
+.focus-warning-actions { margin-left:auto; }
+
+/* GEMINI CHAT ASSISTANT (floating) */
+.gemini-assistant { position: fixed; right: 22px; bottom: 22px; z-index:18000; font-family: 'Inter', sans-serif; }
+.gemini-toggle { width:56px; height:56px; border-radius:50%; background:#6366f1; color:#fff; border:none; box-shadow:0 8px 22px rgba(0,0,0,0.35); display:flex; align-items:center; justify-content:center; cursor:pointer; font-size:1.35rem; position:relative; }
+.gemini-badge { position:absolute; top:-6px; right:-6px; background:#10b981; color:#052e1a; padding:3px 6px; font-size:0.7rem; border-radius:12px; font-weight:700; }
+.gemini-panel { width:360px; max-width:calc(100vw - 56px); height:460px; background:linear-gradient(180deg,#071128, #0b1220); color:#e6eef9; border-radius:12px; box-shadow:0 20px 60px rgba(0,0,0,0.6); margin-bottom:12px; overflow:hidden; display:none; flex-direction:column; }
+.gemini-panel.show { display:flex; }
+.gemini-header { display:flex; align-items:center; gap:10px; padding:12px 14px; border-bottom:1px solid rgba(255,255,255,0.03); }
+.gemini-title { font-weight:700; display:flex; gap:8px; align-items:center; color:#dbeafe; }
+.gemini-title small { font-weight:600; color:#9fb2ff; font-size:0.78rem; opacity:0.9; }
+.gemini-close { margin-left:auto; background:transparent; color:#9aa7c7; border:none; font-size:20px; cursor:pointer; }
+.gemini-body { padding:10px; display:flex; flex-direction:column; gap:8px; height:calc(100% - 120px); }
+.gemini-messages { overflow:auto; flex:1; display:flex; flex-direction:column; gap:8px; padding-right:6px; }
+.gemini-empty { color:#9aa7c7; font-size:0.9rem; text-align:center; margin:8px 4px; }
+.gemini-msg { max-width:86%; padding:10px 12px; border-radius:10px; font-size:0.92rem; line-height:1.25; }
+.gemini-msg.user { background: rgba(255,255,255,0.06); color:#e6eef9; align-self:flex-end; }
+.gemini-msg.ai { background: linear-gradient(90deg,#334155, #0f172a); color:#cfe0ff; align-self:flex-start; border:1px solid rgba(255,255,255,0.02); }
+.gemini-footer { padding:10px; display:flex; gap:8px; align-items:center; border-top:1px solid rgba(255,255,255,0.03); }
+#geminiInput { flex:1; background:transparent; border:1px solid rgba(255,255,255,0.04); padding:8px 10px; border-radius:8px; color:#e6eef9; outline:none; }
+#geminiSend { padding:8px 12px; border-radius:8px; border:none; cursor:pointer; background:#6366f1; color:white; font-weight:700; }
+.gemini-loading { display:inline-block; font-size:0.9rem; color:#9fb2ff; opacity:0.9; margin-left:8px; }
+
+/* PRE-RENDERED FAQ list styles */
+.gemini-faq-list { display:flex; flex-direction:column; gap:8px; padding:6px; }
+.gemini-faq-item { background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.03); padding:10px; border-radius:8px; cursor:pointer; display:flex; justify-content:space-between; gap:8px; align-items:center; transition: background 160ms ease, transform 120ms ease; }
+.gemini-faq-item:hover { background: rgba(255,255,255,0.04); transform: translateY(-2px); }
+.gemini-faq-item.answered { background: linear-gradient(90deg, rgba(51,65,85,0.12), rgba(51,65,85,0.03)); border-color: rgba(99,102,241,0.15); }
+.gemini-faq-item .faq-question { font-weight: 600; color: #e6eef9; font-size: 0.95rem; }
+.gemini-faq-item .faq-hint { font-size: 0.78rem; color: #9aa7c7; padding: 4px 8px; border-radius: 6px; background: rgba(255,255,255,0.02); display:flex; align-items:center; gap:6px; }
+.gemini-faq-item .faq-hint::before { content: '▾'; display:inline-block; transform-origin:center; transition: transform 160ms ease; }
+.gemini-faq-item.expanded .faq-hint::before { transform: rotate(180deg); }
+.gemini-faq-answer { width: calc(100% - 20px); padding:12px; border-radius:8px; margin:6px 6px 0 6px; background: linear-gradient(90deg,#233146, #0f172a); color:#cfe0ff; border:1px solid rgba(255,255,255,0.03); box-shadow: 0 6px 18px rgba(2,6,23,0.55); }
+.gemini-faq-list .gemini-faq-answer { margin-left: 0; }
+.gemini-admin-btn { font-size:0.85rem; }
+
