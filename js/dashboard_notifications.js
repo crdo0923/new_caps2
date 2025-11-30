@@ -6,16 +6,6 @@
 (function() {
     'use strict';
     
-    // Prevent duplicate initialization
-    if (window._dashboardNotificationsInitialized) return;
-    window._dashboardNotificationsInitialized = true;
-    
-    // Clear any existing interval first
-    if (window.dashboardNotificationsInterval) {
-        clearInterval(window.dashboardNotificationsInterval);
-        window.dashboardNotificationsInterval = null;
-    }
-    
     // Wait for DOM
     if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', init);
@@ -110,22 +100,10 @@
             setTimeout(() => { popup.classList.remove('show'); setTimeout(() => popup.remove(), 500); }, 5000);
         }
 
-        // Start polling (every 30 seconds)
-        window.dashboardNotificationsInterval = setInterval(checkNotifications, 30000);
-        
-        // Register for SPA cleanup
-        if (typeof window.registerInterval === 'function') {
-            window.registerInterval(window.dashboardNotificationsInterval);
-        }
+        // Start polling (every 30 seconds) - will be cleared on page navigation
+        setInterval(checkNotifications, 30000);
         
         // Initial check
         checkNotifications();
     }
-    
-    // SPA teardown handler
-    window.addEventListener('beforeunload', function() {
-        if (window.dashboardNotificationsInterval) {
-            clearInterval(window.dashboardNotificationsInterval);
-        }
-    });
 })();
